@@ -69,7 +69,8 @@ def process_csv_file(csv_path, project_name):
 
     tasks = []
     try:
-        with open(csv_path, "r", encoding="utf-8-sig") as f:
+        encoding = "utf-16" if open(csv_path, "rb").read(2) in (b'\xff\xfe', b'\xfe\xff') else "utf-8-sig"
+        with open(csv_path, "r", encoding=encoding) as f:
             reader = csv.DictReader(f)
             for row in reader:
                 tasks.append(row)
