@@ -4,8 +4,10 @@ import imaplib
 import email
 import os
 import re
+import time
 import urllib.request
 from email.header import decode_header
+from email.utils import formatdate
 from datetime import datetime, timezone
 
 
@@ -28,15 +30,10 @@ def slugify(name):
 
 
 def extract_project_name(subject):
-    match = re.search(r"Project\s+(.+?)\s*[-\u2013\u2014]\s*Task\s+Report", subject, re.IGNORECASE)
+    match = re.search(r'\[Fieldwire\]\s+(.+?)\s*\|', subject)
     if match:
         return match.group(1).strip()
-    match = re.search(r"Project\s+(.+?)\s*[-\u2013\u2014]\s*.*Report", subject, re.IGNORECASE)
-    if match:
-        return match.group(1).strip()
-    cleaned = re.sub(r"\s*[-\u2013\u2014]\s*.*Report.*$", "", subject, flags=re.IGNORECASE)
-    cleaned = re.sub(r"^(Re:|Fwd?:)\s*", "", cleaned, flags=re.IGNORECASE).strip()
-    return cleaned if cleaned else "unknown-project"
+    return "unknown-project"
 
 
 def fetch_emails(gmail_address, gmail_app_password, data_dir):
@@ -52,8 +49,9 @@ def fetch_emails(gmail_address, gmail_app_password, data_dir):
 
     try:
         mail.select("Fieldwire")
+        since = formatdate(time.time() - 86400, localtime=False, usegmt=True)[:11]
         status, message_ids = mail.search(
-            None, '(UNSEEN FROM "support@fieldwire.com" SUBJECT "report")'
+            None, f'(UNSEEN FROM "support@fieldwire.com" SUBJECT "report" SINCE "{since}")'
         )
 
         if status != "OK" or not message_ids[0]:
@@ -115,19 +113,22 @@ def fetch_emails(gmail_address, gmail_app_password, data_dir):
                     match = re.search(r'https://files\.us\.fieldwire\.com/\S+', body_text)
                     if match:
                         url = match.group(0).rstrip('">')
-                        print(f"  Found download link: {url}")
-                        project_dir = os.path.join(data_dir, project_slug)
-                        os.makedirs(project_dir, exist_ok=True)
-                        csv_path = os.path.join(project_dir, f"{today}.csv")
-                        urllib.request.urlretrieve(url, csv_path)
-                        print(f"  Downloaded CSV from link: {csv_path}")
-                        results.append({
-                            "project_name": project_name,
-                            "project_slug": project_slug,
-                            "csv_path": csv_path,
-                            "date": today,
-                        })
-                        found = True
+                        if not url.lower().endswith('.pdf'):
+                            print(f"  Found download link: {url}")
+                            project_dir = os.path.join(data_dir, project_slug)
+                            os.makedirs(project_dir, exist_ok=True)
+                            csv_path = os.path.join(project_dir, f"{today}.csv")
+                            urllib.request.urlretrieve(url, csv_path)
+                            print(f"  Downloaded CSV from link: {csv_path}")
+                            results.append({
+                                "project_name": project_name,
+                                "project_slug": project_slug,
+                                "csv_path": csv_path,
+                                "date": today,
+                            })
+                            found = True
+                        else:
+                            print(f"  Skipping PDF link: {url}")
 
                 if not found:
                     print(f"  WARNING: No CSV found in email: {subject}")
