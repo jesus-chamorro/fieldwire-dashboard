@@ -4,6 +4,7 @@ import imaplib
 import email
 import os
 import re
+import urllib.request
 from email.header import decode_header
 from datetime import datetime, timezone
 
@@ -51,7 +52,7 @@ def fetch_emails(gmail_address, gmail_app_password, data_dir):
 
     try:
         mail.select("INBOX")
-        status, message_ids = mail.search(None, '(UNSEEN FROM "noreply@fieldwire.com" SUBJECT "report")')
+        status, message_ids = mail.search(None, '(UNSEEN FROM "support@fieldwire.com" SUBJECT "report")')
 
         if status != "OK" or not message_ids[0]:
             print("No new Fieldwire report emails found.")
@@ -77,11 +78,13 @@ def fetch_emails(gmail_address, gmail_app_password, data_dir):
 
                 print(f"Processing: {subject} -> project '{project_name}'")
 
+                found = False
+
+                # Method 1: Look for CSV attachment
                 for part in msg.walk():
                     content_disposition = str(part.get("Content-Disposition", ""))
                     if "attachment" not in content_disposition:
                         continue
-
                     filename = part.get_filename()
                     if not filename or not filename.lower().endswith(".csv"):
                         continue
@@ -93,31 +96,18 @@ def fetch_emails(gmail_address, gmail_app_password, data_dir):
                     with open(csv_path, "wb") as f:
                         f.write(part.get_payload(decode=True))
 
-                    print(f"  Saved CSV: {csv_path}")
+                    print(f"  Saved CSV attachment: {csv_path}")
                     results.append({
                         "project_name": project_name,
                         "project_slug": project_slug,
                         "csv_path": csv_path,
                         "date": today,
                     })
+                    found = True
+                    break
 
-                mail.store(msg_id, "+FLAGS", "\\Seen")
-
-            except Exception as e:
-                print(f"ERROR: Failed to process email {msg_id}: {e}")
-                continue
-
-    finally:
-        mail.logout()
-
-    print(f"Fetched {len(results)} CSV attachment(s).")
-    return results
-
-
-if __name__ == "__main__":
-    data_dir = os.path.join(os.path.dirname(__file__), "..", "data")
-    fetch_emails(
-        os.environ["GMAIL_ADDRESS"],
-        os.environ["GMAIL_APP_PASSWORD"],
-        data_dir,
-    )
+                # Method 2: Look for download link in email body
+                if not found:
+                    for part in msg.walk():
+                        content_type = part.get_content_type()
+                        if content_type not in ("text/plain", "text/html"):
