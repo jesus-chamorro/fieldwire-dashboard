@@ -49,10 +49,10 @@ def fetch_emails(gmail_address, gmail_app_password, data_dir):
 
     try:
         mail.select("Fieldwire")
-        since = formatdate(time.time() - 86400, localtime=False, usegmt=True)[:11]
-        status, message_ids = mail.search(
-            None, f'(UNSEEN FROM "support@fieldwire.com" SUBJECT "report" SINCE "{since}")'
-        )
+        since = datetime.now(timezone.utc).strftime("%d-%b-%Y")
+status, message_ids = mail.search(
+    None, f'(UNSEEN FROM "support@fieldwire.com" SUBJECT "report" SINCE "{since}")'
+)
 
         if status != "OK" or not message_ids[0]:
             print("No new Fieldwire report emails found.")
