@@ -1,0 +1,1951 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Dashboard</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ─── 1. Design Tokens & Themes ─── */
+:root{
+  --bg:#f4f6f9;--surface:#ffffff;--surface2:#f0f2f6;--surface3:#e8eaf0;
+  --border:#dfe3ea;--border-light:#ebeef3;
+  --text:#2d3748;--text2:#5a6577;--text3:#8b95a5;
+  --green:#66d4a0;--green-dark:#3fb87e;--green-bg:#eafaf1;--green-text:#217a52;
+  --amber:#f7c97e;--amber-dark:#e8a838;--amber-bg:#fef7ec;--amber-text:#8a5d14;
+  --red:#f2959a;--red-dark:#e06068;--red-bg:#fdf0f0;--red-text:#9b2c2c;
+  --blue:#7eb8f7;--blue-dark:#4a93e8;--blue-bg:#eef5fd;--blue-text:#1e5ba6;
+  --teal:#6dcfcf;--purple:#b89cf5;--orange:#f5b27a;--pink:#f2a0c4;
+  --indigo:#8b8ff5;--slate:#94a3b8;--cyan:#6dd5e6;
+  --accent:#5b7ff5;--accent-hover:#4468d9;--accent-bg:rgba(91,127,245,.08);
+  --chart-grid:#ebeef3;--chart-label:#5a6577;--chart-sub:#8b95a5;
+  --chart-track:#f0f2f6;--chart-dot-fill:#ffffff;
+  --chart-area-top:rgba(126,184,247,.2);--chart-area-bot:rgba(126,184,247,.02);
+  --chart-line:#7eb8f7;
+  --card-title-color:#3b82f6;--card-title-glow:0 0 8px rgba(59,130,246,.3),0 0 2px rgba(59,130,246,.2);
+  --radius:12px;--radius-sm:8px;--radius-xs:6px;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,.06),0 2px 4px rgba(0,0,0,.04);
+  --shadow-lg:0 8px 24px rgba(0,0,0,.08),0 4px 8px rgba(0,0,0,.04);
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',Roboto,sans-serif;
+  --transition:all .2s ease;
+}
+[data-theme="dark"]{
+  --bg:#111318;--surface:#1a1d27;--surface2:#22252f;--surface3:#2a2e3a;
+  --border:#2e3342;--border-light:#252937;
+  --text:#d8dae5;--text2:#9ba1b5;--text3:#636b80;
+  --green:#6ee7a8;--green-dark:#4ade80;--green-bg:rgba(110,231,168,.1);--green-text:#6ee7a8;
+  --amber:#fbbf6e;--amber-dark:#f5a623;--amber-bg:rgba(251,191,110,.1);--amber-text:#fbbf6e;
+  --red:#fca5a5;--red-dark:#f87171;--red-bg:rgba(252,165,165,.08);--red-text:#fca5a5;
+  --blue:#93c5fd;--blue-dark:#60a5fa;--blue-bg:rgba(147,197,253,.08);--blue-text:#93c5fd;
+  --teal:#5eead4;--purple:#c4b5fd;--orange:#fdba74;--pink:#f9a8d4;
+  --indigo:#a5b4fc;--slate:#94a3b8;--cyan:#67e8f9;
+  --accent:#818cf8;--accent-hover:#6366f1;--accent-bg:rgba(129,140,248,.1);
+  --chart-grid:#252937;--chart-label:#9ba1b5;--chart-sub:#636b80;
+  --chart-track:#22252f;--chart-dot-fill:#1a1d27;
+  --chart-area-top:rgba(129,140,248,.18);--chart-area-bot:rgba(129,140,248,.02);
+  --chart-line:#818cf8;
+  --card-title-color:#60a5fa;--card-title-glow:0 0 12px rgba(96,165,250,.5),0 0 4px rgba(96,165,250,.3);
+  --shadow:0 1px 3px rgba(0,0,0,.3),0 1px 2px rgba(0,0,0,.2);
+  --shadow-md:0 4px 12px rgba(0,0,0,.3),0 2px 4px rgba(0,0,0,.2);
+  --shadow-lg:0 8px 24px rgba(0,0,0,.4),0 4px 8px rgba(0,0,0,.3);
+}
+
+/* ─── 2. Layout & Structure ─── */
+html{font-size:14px;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;transition:background .3s,color .3s}
+::selection{background:var(--accent-bg);color:var(--accent)}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.header{background:var(--surface);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;box-shadow:var(--shadow);transition:background .3s}
+.header-left{display:flex;align-items:center;gap:12px}
+.header-logo{width:36px;height:36px;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1rem}
+.header h1{font-size:1.15rem;font-weight:600;color:var(--text)}
+.header h1 span{color:var(--accent)}
+.header-actions{display:flex;gap:8px;align-items:center}
+.btn{padding:8px 18px;border-radius:var(--radius-xs);border:1px solid var(--border);background:var(--surface);color:var(--text2);font-size:.8rem;font-weight:500;cursor:pointer;transition:var(--transition);font-family:var(--font);display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--surface2);border-color:var(--text3)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-ghost{border-color:transparent;background:transparent}
+.btn-ghost:hover{background:var(--surface2)}
+.btn svg{width:16px;height:16px;flex-shrink:0}
+.theme-toggle{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition);padding:0;color:var(--text2)}
+.theme-toggle:hover{background:var(--surface3);color:var(--text)}
+.theme-toggle svg{width:18px;height:18px}
+.theme-toggle .icon-sun,.theme-toggle .icon-moon{display:none}
+[data-theme="dark"] .theme-toggle .icon-sun{display:block}
+[data-theme="light"] .theme-toggle .icon-moon{display:block}
+:root:not([data-theme]) .theme-toggle .icon-moon{display:block}
+#drop-zone{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:55vh;border:2px dashed var(--border);border-radius:16px;margin:48px auto;max-width:540px;padding:56px 40px;transition:var(--transition);cursor:pointer;background:var(--surface)}
+#drop-zone.dragover{border-color:var(--accent);background:var(--accent-bg)}
+#drop-zone h2{font-size:1.3rem;font-weight:600;margin-bottom:6px}
+#drop-zone p{color:var(--text3);font-size:.88rem;margin-bottom:24px}
+.drop-icon{width:64px;height:64px;border-radius:16px;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.drop-icon svg{width:32px;height:32px;color:var(--accent)}
+.csv-error{max-width:540px;margin:24px auto;background:var(--surface);border:1px solid var(--red-dark);border-radius:var(--radius);padding:32px 28px;text-align:center;box-shadow:var(--shadow-md);animation:csvErrorIn .3s ease}
+@keyframes csvErrorIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.csv-error-icon{width:56px;height:56px;border-radius:50%;background:var(--red-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.csv-error-icon svg{width:28px;height:28px;color:var(--red-dark)}
+.csv-error-title{font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.csv-error-subtitle{font-size:.88rem;color:var(--text2);margin-bottom:20px;line-height:1.5}
+.csv-error-detail{text-align:left;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:18px}
+.csv-error-section{margin-bottom:12px}
+.csv-error-section:last-child{margin-bottom:0}
+.csv-error-label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text3);margin-bottom:6px}
+.csv-error-chips{display:flex;flex-wrap:wrap;gap:6px}
+.csv-chip{display:inline-block;padding:3px 10px;border-radius:12px;font-size:.75rem;font-weight:500;background:var(--surface3);color:var(--text2);border:1px solid var(--border)}
+.csv-chip-missing{background:var(--red-bg);color:var(--red-text);border-color:var(--red-dark);font-weight:600}
+.csv-chip-warn{background:var(--amber-bg);color:var(--amber-text);border-color:var(--amber-dark)}
+.csv-chip-req{background:var(--blue-bg);color:var(--blue-text);border-color:var(--blue-dark)}
+.csv-error-hint{font-size:.82rem;color:var(--text3);line-height:1.5;margin-bottom:20px}
+.csv-error-hint strong{color:var(--text2)}
+.csv-error-dismiss{margin:0 auto}
+#dashboard{display:none;padding:20px 24px 48px;max-width:1480px;margin:0 auto}
+.grid{display:grid;gap:18px}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.grid-2{grid-template-columns:1fr 1fr}
+.grid-2-1{grid-template-columns:2fr 1fr}
+.section{margin-top:20px}
+
+/* ─── 3. Component Styles ─── */
+.card{background:var(--surface);border:1px solid var(--border-light);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);transition:background .3s,border-color .3s,box-shadow .3s}
+.card:hover{box-shadow:var(--shadow-md)}
+.card-title{font-size:.92rem;color:var(--card-title-color);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;font-weight:700;display:flex;align-items:center;gap:6px;text-shadow:var(--card-title-glow)}
+.kpi{text-align:center;padding:28px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px}
+.kpi-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.kpi-icon svg{width:24px;height:24px}
+.kpi .value{font-size:2.6rem;font-weight:800;line-height:1;letter-spacing:-.03em}
+.kpi .label{font-size:.88rem;color:var(--text2);margin-top:8px;font-weight:500}
+.kpi .sub{font-size:.76rem;color:var(--text3);margin-top:3px}
+.kpi-bar{height:5px;border-radius:3px;background:var(--surface2);margin-top:16px;overflow:hidden;width:80%;max-width:160px}
+.kpi-bar-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.progress-ring{position:relative;width:96px;height:96px;margin-bottom:12px}
+.progress-ring svg{transform:rotate(-90deg)}
+.progress-ring .pct{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.4rem;font-weight:800}
+.filter-bar-wrap{background:var(--surface);border:1px solid var(--border-light);border-radius:var(--radius);padding:14px 18px;box-shadow:var(--shadow);transition:background .3s}
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filter-bar label{font-size:.72rem;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-right:2px}
+.pill{display:inline-flex;align-items:center;padding:5px 14px;border-radius:20px;font-size:.76rem;font-weight:500;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;transition:var(--transition);user-select:none}
+.pill:hover{background:var(--surface2);border-color:var(--text3)}
+.pill.active{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
+.pill .dot{width:8px;height:8px;border-radius:50%;margin-right:7px;flex-shrink:0}
+.filter-sep{width:1px;height:22px;background:var(--border);margin:0 6px;flex-shrink:0}
+.pill-count{font-size:.65rem;background:var(--surface2);padding:1px 6px;border-radius:10px;margin-left:6px;color:var(--text3)}
+.pill.active .pill-count{background:var(--accent-bg);color:var(--accent)}
+.search-wrap{position:relative;display:inline-flex;align-items:center}
+.search-wrap svg{position:absolute;left:10px;width:15px;height:15px;color:var(--text3);pointer-events:none}
+.search-box{padding:7px 12px 7px 32px;border-radius:var(--radius-xs);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.8rem;width:240px;font-family:var(--font);transition:var(--transition)}
+.search-box::placeholder{color:var(--text3)}
+.search-box:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+select.filter-select{padding:5px 28px 5px 10px;border-radius:var(--radius-xs);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.78rem;cursor:pointer;-webkit-appearance:none;font-family:var(--font)}
+select.filter-select option{background:var(--surface);color:var(--text)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;justify-content:center}
+.legend-item{display:flex;align-items:center;font-size:.76rem;color:var(--text2);cursor:pointer;transition:var(--transition);padding:3px 8px;border-radius:var(--radius-xs)}
+.legend-item:hover{background:var(--surface2)}
+.legend-item .swatch{width:10px;height:10px;border-radius:3px;margin-right:6px;flex-shrink:0}
+.cat-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-xs);cursor:pointer;transition:var(--transition);border-bottom:1px solid var(--border-light)}
+.cat-row:last-child{border-bottom:none}
+.cat-row:hover{background:var(--surface2)}
+.cat-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cat-icon svg{width:16px;height:16px}
+.cat-label{font-size:.82rem;font-weight:600;color:var(--text);width:140px;flex-shrink:0;text-align:left}
+.cat-bar-wrap{flex:1;height:22px;border-radius:6px;display:flex;overflow:hidden;background:var(--surface2)}
+.cat-bar-seg{height:100%;min-width:0;position:relative;display:flex;align-items:center;justify-content:center}
+.cat-bar-seg span{font-size:.65rem;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.cat-total{font-size:.78rem;color:var(--text3);width:36px;text-align:right;flex-shrink:0;font-weight:600}
+.heatmap-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:var(--radius-xs);cursor:pointer;transition:var(--transition)}
+.heatmap-row:hover{background:var(--surface2)}
+.heatmap-row.active{background:var(--accent-bg)}
+.heatmap-label{font-size:.78rem;color:var(--text2);min-width:100px;text-align:right;flex-shrink:0;font-weight:500;white-space:nowrap}
+.heatmap-bar{flex:1;height:26px;border-radius:var(--radius-xs);display:flex;overflow:hidden;background:var(--surface2)}
+.heatmap-seg{height:100%;transition:width .4s ease;position:relative;min-width:0}
+.heatmap-bar .count-label{position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:.65rem;color:#fff;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.heatmap-total{font-size:.74rem;color:var(--text3);width:34px;text-align:left;flex-shrink:0;font-weight:600}
+.heatmap-pct{font-size:.68rem;width:40px;text-align:left;flex-shrink:0;font-weight:600}
+.heatmap-expand{font-size:.7rem;color:var(--text3);width:20px;text-align:center;flex-shrink:0;transition:transform .2s}
+.heatmap-expand.open{transform:rotate(90deg)}
+.floor-nested{overflow:hidden;transition:max-height .3s ease;max-height:0;margin:0 0 0 80px}
+.floor-nested.open{max-height:2000px}
+.floor-nested-inner{padding:8px 0}
+.floor-nested table{width:100%;border-collapse:collapse;font-size:.76rem}
+.floor-nested th{padding:6px 10px;text-align:left;color:var(--text3);font-weight:600;font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.floor-nested td{padding:5px 10px;border-bottom:1px solid var(--border-light)}
+.floor-nested tr:last-child td{border-bottom:none}
+.floor-nested tr:hover td{background:var(--surface2)}
+.table-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:12px;flex-wrap:wrap}
+.table-info{font-size:.76rem;color:var(--text3)}
+.active-col-filters{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.col-filter-tag{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:12px;font-size:.7rem;background:var(--accent-bg);color:var(--accent);border:1px solid rgba(129,140,248,.2);cursor:pointer}
+.col-filter-tag:hover{background:rgba(129,140,248,.15)}
+.col-filter-tag svg{width:12px;height:12px}
+.table-wrap{overflow-x:auto;border:1px solid var(--border-light);border-radius:var(--radius-sm);background:var(--surface)}
+table.data-table{width:100%;border-collapse:collapse;font-size:.78rem;table-layout:fixed}
+table.data-table thead{background:var(--surface2)}
+table.data-table th{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);color:var(--text2);font-weight:600;white-space:nowrap;position:relative;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;background:var(--surface2)}
+table.data-table th .th-content{display:inline-flex;align-items:center;gap:4px;cursor:pointer;user-select:none}
+table.data-table th .th-content:hover{color:var(--text)}
+table.data-table th .sort-arrow{font-size:.6rem;opacity:.3;transition:var(--transition)}
+table.data-table th.sorted .sort-arrow{opacity:1;color:var(--accent)}
+table.data-table th .filter-icon{width:18px;height:18px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);margin-right:2px;flex-shrink:0;opacity:.4;vertical-align:middle}
+table.data-table th .filter-icon:hover{opacity:1;background:var(--border)}
+table.data-table th .filter-icon.has-filter{opacity:1;color:var(--accent);background:var(--accent-bg)}
+table.data-table th .filter-icon svg{width:12px;height:12px}
+table.data-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+table.data-table th .th-resize{position:absolute;right:0;top:0;bottom:0;width:5px;cursor:col-resize;background:transparent;z-index:1}
+table.data-table th .th-resize:hover{background:var(--accent)}
+table.data-table tbody tr{transition:background .1s}
+table.data-table tbody tr:hover td{background:var(--surface2)}
+table.data-table tbody tr:last-child td{border-bottom:none}
+.status-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:600;white-space:nowrap}
+.status-badge .status-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.status-tested{background:var(--green-bg);color:var(--green-text)}.status-tested .status-dot{background:var(--green-dark)}
+.status-cable{background:var(--amber-bg);color:var(--amber-text)}.status-cable .status-dot{background:var(--amber-dark)}
+.status-open{background:var(--red-bg);color:var(--red-text)}.status-open .status-dot{background:var(--red-dark)}
+.tag-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.68rem;background:var(--surface2);color:var(--text2);margin:1px 2px;font-weight:500}
+.pagination{display:flex;gap:3px;align-items:center;justify-content:center;margin-top:14px}
+.pagination button{padding:5px 11px;border-radius:var(--radius-xs);border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;font-size:.76rem;font-family:var(--font);transition:var(--transition)}
+.pagination button:hover:not(:disabled){background:var(--surface2);border-color:var(--text3)}
+.pagination button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.pagination button:disabled{opacity:.3;cursor:default}
+.assignee-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-light)}
+.assignee-row:last-child{border-bottom:none}
+.assignee-avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;color:var(--accent);flex-shrink:0}
+.assignee-info{flex:1;min-width:0}
+.assignee-name{font-size:.82rem;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.assignee-email{font-size:.68rem;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.assignee-stats{display:flex;gap:12px;align-items:center;flex-shrink:0}
+.assignee-stat{text-align:center}
+.assignee-stat .num{font-size:.88rem;font-weight:700}
+.assignee-stat .lbl{font-size:.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:.04em}
+.mini-bar{height:8px;border-radius:4px;display:flex;overflow:hidden;background:var(--surface2);width:120px}
+.mini-bar span{height:100%;display:block}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:7px;max-height:320px;overflow-y:auto;padding:2px}
+.tag-item{padding:5px 12px;border-radius:20px;font-size:.76rem;font-weight:500;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;transition:var(--transition);user-select:none}
+.tag-item:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.tag-item.active{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
+.tag-item .tag-count{color:var(--text3);font-size:.65rem;margin-left:4px;font-weight:600}
+.tag-item.active .tag-count{color:var(--accent)}
+.col-filter-dropdown{position:absolute;top:100%;left:0;z-index:300;min-width:200px;max-width:280px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);padding:8px 0;margin-top:4px;display:none}
+.col-filter-dropdown.open{display:block}
+.col-filter-search{padding:6px 12px;margin:0 8px 6px;border-radius:var(--radius-xs);border:1px solid var(--border);font-size:.76rem;width:calc(100% - 16px);font-family:var(--font);background:var(--surface2);color:var(--text)}
+.col-filter-search:focus{outline:none;border-color:var(--accent)}
+.col-filter-actions{display:flex;gap:4px;padding:0 8px 6px;border-bottom:1px solid var(--border-light)}
+.col-filter-actions button{font-size:.68rem;padding:2px 8px;border:none;background:transparent;color:var(--accent);cursor:pointer;font-family:var(--font);border-radius:4px}
+.col-filter-actions button:hover{background:var(--accent-bg)}
+.col-filter-list{max-height:220px;overflow-y:auto;padding:4px 0}
+.col-filter-option{display:flex;align-items:center;gap:8px;padding:5px 12px;cursor:pointer;font-size:.76rem;color:var(--text);transition:background .1s}
+.col-filter-option:hover{background:var(--surface2)}
+.col-filter-option input[type="checkbox"]{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--border);appearance:none;-webkit-appearance:none;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:var(--transition);background:var(--surface)}
+.col-filter-option input[type="checkbox"]:checked{background:var(--accent);border-color:var(--accent)}
+.col-filter-option input[type="checkbox"]:checked::after{content:'';display:block;width:4px;height:7px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);margin-top:-1px}
+.col-filter-apply{padding:6px 12px;margin:6px 8px 2px;border-radius:var(--radius-xs);border:none;background:var(--accent);color:#fff;font-size:.76rem;cursor:pointer;width:calc(100% - 16px);font-family:var(--font);font-weight:500;transition:var(--transition)}
+.col-filter-apply:hover{background:var(--accent-hover)}
+.col-filter-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:250;display:none}
+.col-filter-overlay.open{display:block}
+.chat-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.chat-overlay.open{display:flex}
+.chat-modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:580px;max-height:85vh;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);animation:chatIn .2s ease}
+@keyframes chatIn{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.chat-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0}
+.chat-header-info{flex:1;min-width:0}
+.chat-header-title{font-size:.92rem;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-header-sub{font-size:.72rem;color:var(--text3);margin-top:2px;display:flex;gap:8px;align-items:center}
+.chat-close{width:32px;height:32px;border-radius:50%;border:none;background:var(--surface2);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:var(--transition)}
+.chat-close:hover{background:var(--surface3);color:var(--text)}
+.chat-close svg{width:16px;height:16px}
+.chat-body{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:3px}
+.chat-msg{display:flex;gap:10px;align-items:flex-start;max-width:100%}
+.chat-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;flex-shrink:0;color:#fff}
+.chat-bubble{padding:8px 12px;border-radius:12px;font-size:.78rem;line-height:1.5;max-width:420px;word-wrap:break-word}
+.chat-msg.system .chat-bubble{background:var(--surface2);color:var(--text3);font-size:.72rem;padding:4px 10px;border-radius:8px}
+.chat-msg.comment .chat-bubble{background:var(--accent-bg);color:var(--text);border:1px solid rgba(129,140,248,.15)}
+.chat-msg.photo .chat-bubble{background:var(--green-bg);color:var(--green-text);font-size:.72rem;padding:6px}
+.chat-msg.photo .chat-bubble a{color:var(--green-dark);text-decoration:none;font-weight:500;display:block}
+.chat-msg.photo .chat-bubble a:hover{text-decoration:underline}
+.chat-msg.photo .chat-bubble svg{width:14px;height:14px;flex-shrink:0}
+.chat-sender{font-size:.68rem;font-weight:600;color:var(--text2);margin-bottom:2px}
+.chat-filter-bar{display:flex;gap:4px;padding:10px 20px;border-bottom:1px solid var(--border-light);flex-shrink:0;flex-wrap:wrap}
+.chat-filter-pill{padding:3px 10px;border-radius:14px;font-size:.68rem;font-weight:500;border:1px solid var(--border);background:var(--surface);color:var(--text3);cursor:pointer;transition:var(--transition)}
+.chat-filter-pill:hover{border-color:var(--text3);color:var(--text2)}
+.chat-filter-pill.active{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
+.chat-count{font-size:.72rem;color:var(--text3);padding:10px 20px;border-top:1px solid var(--border-light);flex-shrink:0}
+.chat-icon-btn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;background:var(--accent-bg);color:var(--accent);cursor:pointer;transition:var(--transition);flex-shrink:0;vertical-align:middle;margin-right:6px;border:none;padding:0}
+.chat-icon-btn:hover{background:var(--accent);color:#fff}
+.chat-icon-btn svg{width:13px;height:13px}
+.chat-photo-thumb{max-width:200px;max-height:160px;border-radius:8px;display:block;cursor:pointer;object-fit:cover;margin:2px 0}
+.floorplan-toolbar{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.floorplan-tags{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.floorplan-tag{padding:5px 12px;border-radius:var(--radius-xs);border:1px solid var(--border);background:var(--surface);color:var(--text2);font-size:.76rem;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap;line-height:1.3}
+.floorplan-tag:hover{border-color:var(--accent);color:var(--text)}
+.floorplan-tag.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.floorplan-legend{display:flex;gap:10px;align-items:center;font-size:.7rem;color:var(--text3)}
+.floorplan-legend span{display:flex;align-items:center;gap:4px}
+.floorplan-legend .swatch{width:8px;height:8px;border-radius:50%;border:1.5px solid #fff}
+.floorplan-container{position:relative;overflow:hidden;border-radius:var(--radius-sm);background:var(--surface2);min-height:300px;cursor:grab}
+.floorplan-container.grabbing{cursor:grabbing}
+.floorplan-inner{transform-origin:0 0;position:relative;will-change:transform}
+.floorplan-inner img{width:100%;display:block}
+.floorplan-pins{position:absolute;inset:0}
+.floorplan-zoom-controls{position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:4px;z-index:15}
+.floorplan-zoom-controls button{width:30px;height:30px;border:1px solid var(--border);border-radius:var(--radius-xs);background:var(--surface);color:var(--text);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;opacity:.85;transition:opacity .15s,background .15s}
+.floorplan-zoom-controls button:hover{opacity:1;background:var(--surface2)}
+.floorplan-zoom-level{font-size:.62rem;text-align:center;color:var(--text3);line-height:1;padding:1px 0}
+.floorplan-pin{position:absolute;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;border:2px solid #fff;cursor:pointer;transition:transform .15s,box-shadow .15s;z-index:1;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.floorplan-pin:hover{transform:translate(-50%,-50%) scale(1.6);z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.floorplan-pin.has-chat{border-color:var(--accent)}
+.floorplan-tooltip{position:absolute;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;box-shadow:var(--shadow-lg);z-index:20;pointer-events:none;max-width:260px;font-size:.76rem;line-height:1.5}
+.floorplan-tooltip .fp-tt-id{color:var(--text3);font-size:.68rem;font-weight:600}
+.floorplan-tooltip .fp-tt-title{font-weight:600;color:var(--text);margin:2px 0 4px}
+.floorplan-tooltip .fp-tt-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.floorplan-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;color:var(--text3);font-size:.88rem;gap:8px}
+.floorplan-empty svg{width:40px;height:40px;opacity:.4}
+.floorplan-loading{display:flex;align-items:center;justify-content:center;min-height:300px;color:var(--text3);font-size:.82rem}
+.loading-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:400;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.loading-spinner{background:var(--surface);border-radius:var(--radius);padding:32px 48px;box-shadow:var(--shadow-lg);text-align:center;color:var(--text2);font-size:.88rem}
+
+/* ─── 4. Responsive Overrides ─── */
+@media(max-width:1100px){.grid-4{grid-template-columns:repeat(2,1fr)}.grid-2-1{grid-template-columns:1fr}}
+@media(max-width:768px){.grid-4,.grid-2,.grid-2-1{grid-template-columns:1fr}.header{padding:12px 16px}.filter-bar{flex-direction:column;align-items:stretch}.filter-sep{display:none}.search-box{width:100%}#dashboard{padding:12px}.floorplan-tags{gap:4px}.floorplan-tag{padding:4px 9px;font-size:.7rem}.floorplan-legend{justify-content:center}}
+
+/* ─── 5. Accessibility ─── */
+.skip-link{position:absolute;top:-40px;left:0;background:var(--accent);color:#fff;padding:8px 16px;z-index:9999;font-size:.82rem;border-radius:0 0 var(--radius-xs) 0;transition:top .2s}
+.skip-link:focus{top:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important}}
+
+/* Colorblind stripe patterns for bar segments */
+.cb-pattern-green{background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,rgba(255,255,255,.15) 3px,rgba(255,255,255,.15) 6px)}
+.cb-pattern-amber{background-image:repeating-linear-gradient(-45deg,transparent,transparent 3px,rgba(255,255,255,.15) 3px,rgba(255,255,255,.15) 6px)}
+
+/* SVG donut */
+.donut-svg{display:block;margin:0 auto}
+.donut-svg path{cursor:pointer;transition:opacity .15s}
+.donut-svg path:hover{opacity:.8}
+
+/* SVG timeline */
+.timeline-svg{display:block;width:100%}
+</style>
+</head>
+<body>
+
+<!-- 5. Accessibility: Skip link -->
+<a class="skip-link" href="#dashboard">Skip to dashboard</a>
+
+<!-- 6. Static HTML Skeleton -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-logo" id="header-logo">P</div>
+    <h1><span id="project-name">Project</span> — Task Analytics</h1>
+  </div>
+  <div class="header-actions">
+    <span id="file-name" style="font-size:.76rem;color:var(--text3)"></span>
+    <button class="btn btn-primary" data-action="load-csv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Load CSV</button>
+    <button class="btn btn-ghost" id="reset-btn" data-action="reset" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>Reset</button>
+    <button class="theme-toggle" data-action="toggle-theme" title="Toggle theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+    </button>
+    <input type="file" id="file-input" accept=".csv,.tsv,.txt" style="display:none">
+  </div>
+</div>
+
+<div id="drop-zone">
+  <div class="drop-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+  <h2>Load Fieldwire Export</h2>
+  <p>Drag &amp; drop the CSV file here, or click to browse</p>
+  <button class="btn btn-primary" data-action="load-csv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Choose File</button>
+</div>
+
+<div id="dashboard">
+  <div class="grid grid-4" id="kpi-row"></div>
+  <div class="section"><div class="filter-bar-wrap"><div class="filter-bar" id="filter-bar"></div></div></div>
+  <div class="section grid grid-2">
+    <div class="card"><div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;opacity:.7"><path d="M21.21 15.89A10 10 0 118 2.83"/><path d="M22 12A10 10 0 0012 2v10z"/></svg>Status Breakdown</div><div id="donut-section" style="display:flex;align-items:center;justify-content:center;flex-direction:column" role="img" aria-label="Status donut chart"></div></div>
+    <div class="card"><div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;opacity:.7"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Device Category Progress</div><div id="category-section"></div></div>
+  </div>
+  <div class="section"><div class="card"><div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;opacity:.7"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>Floor-by-Floor Progress</div><div id="floor-heatmap"></div></div></div>
+  <div class="section"><div class="card"><div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;opacity:.7"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Floor Plan Viewer</div><div class="floorplan-toolbar" id="floorplan-toolbar"></div><div class="floorplan-container" id="floorplan-container"><div class="floorplan-empty" id="floorplan-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg><span>Select a floor plan to view device locations</span></div></div></div></div>
+  <div class="section grid grid-2-1">
+    <div class="card"><div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;opacity:.7"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Tasks Created Over Time</div><div id="timeline-section" role="img" aria-label="Timeline chart"></div></div>
+    <div class="card"><div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;opacity:.7"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Installer Workload</div><div id="assignee-section"></div></div>
+  </div>
+  <div class="section"><div class="card"><div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;opacity:.7"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Device Tags &amp; Subtypes</div><div class="tag-cloud" id="tag-cloud"></div></div></div>
+  <div class="section"><div style="margin-bottom:12px"><div class="search-wrap" style="width:100%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" class="search-box" id="global-search" placeholder="Search all task data..." style="width:100%"></div></div><div class="card" style="padding:18px"><div class="table-toolbar"><div class="card-title" style="margin-bottom:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;opacity:.7"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>All Tasks</div><div class="active-col-filters" id="active-col-filters"></div><div class="table-info" id="table-info"></div></div><div class="table-wrap"><table class="data-table" id="task-table"><thead><tr id="table-head"></tr></thead><tbody id="table-body"></tbody></table></div><div class="pagination" id="pagination"></div></div></div>
+</div>
+<div class="col-filter-overlay" id="col-filter-overlay"></div>
+<div class="chat-overlay" id="chat-overlay" role="dialog" aria-modal="true" aria-label="Task messages">
+  <div class="chat-modal">
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <div class="chat-header-title" id="chat-title"></div>
+        <div class="chat-header-sub" id="chat-sub"></div>
+      </div>
+      <button class="chat-close" data-action="close-chat" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="chat-filter-bar" id="chat-filter-bar"></div>
+    <div class="chat-body" id="chat-body"></div>
+    <div class="chat-count" id="chat-count"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// 7. Signal System — reactive state primitives (~40 lines)
+//
+// Minimal Preact-signals-style reactivity. Three primitives:
+//   signal(val)    — mutable container; .get() auto-subscribes, .peek() does not
+//   computed(fn)   — lazy derived value; re-evaluates only when deps change
+//   effect(fn)     — side-effect that auto-reruns when any .get() dep changes
+//   batch(fn)      — group multiple .set() calls; effects run once at the end
+//
+// Auto-subscription: when effect/computed calls signal.get(), _currentEffect
+// is captured in the signal's subscriber set. On .set(), all subscribers fire.
+// ═══════════════════════════════════════════════════════════════
+
+// _currentEffect: the currently executing effect/updater (for auto-subscription)
+// _batchDepth: >0 means we're inside a batch() — defer effect execution
+// _batchQueue: effects queued during batch; deduplicated via Set
+let _currentEffect = null, _batchDepth = 0, _batchQueue = new Set();
+
+function signal(val) {
+  const s = { _val: val, _subs: new Set() };
+  // .get() — read value AND subscribe the running effect (if any)
+  s.get = () => { if (_currentEffect) s._subs.add(_currentEffect); return s._val; };
+  // .peek() — read value WITHOUT subscribing (use in event handlers)
+  s.peek = () => s._val;
+  // .set() — update value; skip if unchanged (===). During batch, queue effects; otherwise run immediately
+  s.set = (v) => {
+    if (v === s._val) return;
+    s._val = v;
+    if (_batchDepth > 0) { s._subs.forEach(e => _batchQueue.add(e)); }
+    else { s._subs.forEach(e => e()); }
+  };
+  return s;
+}
+
+function computed(fn) {
+  const c = { _val: undefined, _subs: new Set(), _dirty: true };
+  // updater — called when any upstream dep changes; marks dirty + notifies downstream
+  const updater = () => { c._dirty = true; if (_batchDepth > 0) c._subs.forEach(e => _batchQueue.add(e)); else c._subs.forEach(e => e()); };
+  // .get() — lazy eval: only recomputes if dirty. Swaps _currentEffect to updater so
+  //          fn()'s .get() calls subscribe THIS computed's updater (not the outer effect)
+  c.get = () => {
+    if (_currentEffect) c._subs.add(_currentEffect);
+    if (c._dirty) { const prev = _currentEffect; _currentEffect = updater; c._val = fn(); _currentEffect = prev; c._dirty = false; }
+    return c._val;
+  };
+  // .peek() — same lazy eval, but doesn't register subscriber (like signal.peek)
+  c.peek = () => { if (c._dirty) { const prev = _currentEffect; _currentEffect = updater; c._val = fn(); _currentEffect = prev; c._dirty = false; } return c._val; };
+  return c;
+}
+
+// effect() — runs fn immediately, then re-runs whenever any signal/computed read
+// inside fn changes. Returns the runner for manual re-trigger if needed.
+function effect(fn) {
+  const run = () => { const prev = _currentEffect; _currentEffect = run; fn(); _currentEffect = prev; };
+  run(); // initial execution — sets up subscriptions
+  return run;
+}
+
+// batch() — groups multiple signal.set() calls. Effects are collected in _batchQueue
+// and flushed once when the outermost batch exits (supports nesting via _batchDepth).
+function batch(fn) {
+  _batchDepth++;
+  try { fn(); } finally {
+    _batchDepth--;
+    if (_batchDepth === 0) { const q = [..._batchQueue]; _batchQueue.clear(); q.forEach(e => e()); }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 8. DOM Helpers — safe element creation (~50 lines)
+//
+// h()      — create HTML elements with attrs + children (JSX-like)
+// svgEl()  — create SVG namespace elements
+// patch()  — replace container contents (string, node, or array)
+// text()   — safe text node (no innerHTML injection)
+// escHtml()— escape user content for use in innerHTML strings
+// arcPath()— SVG pie/donut arc path string
+// ═══════════════════════════════════════════════════════════════
+
+// h(tag, attrs, ...children) — generic HTML element factory.
+// Attrs: 'html' key → innerHTML (opt-in for trusted SVG icons only),
+//        'style' object → Object.assign, 'on*' → addEventListener,
+//        'className' → el.className, anything else → setAttribute.
+// Children: strings/numbers become text nodes; null/false are skipped.
+function h(tag, attrs, ...children) {
+  const el = document.createElement(tag);
+  if (attrs) {
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === 'html') { el.innerHTML = v; }                                    // trusted HTML only (SVG icons)
+      else if (k === 'style' && typeof v === 'object') { Object.assign(el.style, v); }
+      else if (k.startsWith('on') && typeof v === 'function') { el.addEventListener(k.slice(2), v); }
+      else if (k === 'className') { el.className = v; }
+      else { el.setAttribute(k, v); }
+    }
+  }
+  for (const c of children) {
+    if (c == null || c === false) continue;
+    if (typeof c === 'string' || typeof c === 'number') el.appendChild(document.createTextNode(c));
+    else if (c instanceof Node) el.appendChild(c);
+    else if (Array.isArray(c)) c.forEach(x => { if (x instanceof Node) el.appendChild(x); else if (x != null && x !== false) el.appendChild(document.createTextNode(String(x))); });
+  }
+  return el;
+}
+
+// svgEl() — like h() but creates in SVG namespace (required for <svg>, <path>, <circle>, etc.)
+function svgEl(tag, attrs, ...children) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  if (attrs) for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+  for (const c of children) {
+    if (c == null) continue;
+    if (typeof c === 'string') el.appendChild(document.createTextNode(c));
+    else if (c instanceof Node) el.appendChild(c);
+  }
+  return el;
+}
+
+// patch() — clear and replace a container's content. Accepts string (innerHTML),
+// single Node, or Node array (via DocumentFragment for single reflow).
+function patch(container, newContent) {
+  if (typeof newContent === 'string') { container.innerHTML = newContent; }
+  else if (newContent instanceof Node) { container.textContent = ''; container.appendChild(newContent); }
+  else if (Array.isArray(newContent)) { container.textContent = ''; const f = document.createDocumentFragment(); newContent.forEach(n => { if (n instanceof Node) f.appendChild(n); }); container.appendChild(f); }
+}
+
+function text(s) { return document.createTextNode(s); }
+
+// escHtml() — escape the 4 HTML-sensitive chars for safe insertion in innerHTML strings.
+// Only needed when building HTML via string concat; h()/text() are inherently safe.
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// arcPath() — generate SVG path data for a pie wedge from center (cx,cy) with radius r.
+// Used by the donut chart; angles in radians, 0 = 3-o'clock, clockwise positive.
+function arcPath(cx, cy, r, startAngle, endAngle) {
+  const x1 = cx + r * Math.cos(startAngle), y1 = cy + r * Math.sin(startAngle);
+  const x2 = cx + r * Math.cos(endAngle), y2 = cy + r * Math.sin(endAngle);
+  const large = endAngle - startAngle > Math.PI ? 1 : 0;  // SVG large-arc-flag
+  return `M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${large} 1 ${x2},${y2} Z`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 9. Data Pipeline — CSV parser, message parser, status classifier
+//
+// Transforms raw Fieldwire CSV exports into structured task objects.
+// Handles: UTF-16LE/BE/UTF-8 encoding, dynamic column detection,
+// tab-separated parsing, status classification, message parsing.
+// ═══════════════════════════════════════════════════════════════
+
+// classifyStatus() — maps free-text status strings to traffic-light categories:
+//   0 = green  (done/tested/verified/complete)
+//   1 = amber  (in-progress: cable pulled, roughed in, mounted, etc.)
+//   2 = red    (open/not started — default fallback)
+// Keywords are matched case-insensitively against the status string.
+function classifyStatus(s) {
+  const l = s.toLowerCase();
+  if (l.includes('tested') || l.includes('pass') || l.includes('complete') || l.includes('verified') || l.includes('done') || l.includes('installed') || l.includes('finished') || l.includes('closed')) return 0;
+  if (l.includes('cable') || l.includes('rough') || l.includes('wire') || l.includes('progress') || l.includes('framed') || l.includes('mounted') || l.includes('terminated') || l.includes('sheetrock') || l.includes('painted') || l.includes('active') || l.includes('partial')) return 1;
+  return 2;
+}
+
+// Rotating category colors — cycled by index in category aggregation
+const CAT_COLORS_KEYS = ['--blue','--teal','--purple','--orange','--pink','--indigo','--slate','--cyan'];
+const CAT_ICONS_MAP = {
+  'Wireless Access Point':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0114.08 0"/><path d="M1.42 9a16 16 0 0121.16 0"/><path d="M8.53 16.11a6 6 0 016.95 0"/><circle cx="12" cy="20" r="1"/></svg>',
+  'CCTV':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>',
+  'Audio Visual':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 010 14.14"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>',
+  'Infrastructure':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>',
+  'Access Control':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>',
+  'Data Ports':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11a9 9 0 0118 0"/><path d="M4 4a16 16 0 0118 0"/><circle cx="12" cy="17" r="1"/><line x1="12" y1="11" x2="12" y2="17"/></svg>',
+  'Intercoms':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>',
+  'Floor Status':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+  'WAP':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0114.08 0"/><path d="M1.42 9a16 16 0 0121.16 0"/><path d="M8.53 16.11a6 6 0 016.95 0"/><circle cx="12" cy="20" r="1"/></svg>'
+};
+// getCatIcon() — fuzzy match a category name to an SVG icon; falls back to Infrastructure
+function getCatIcon(name) { for (const [k, v] of Object.entries(CAT_ICONS_MAP)) { if (name.includes(k) || k.includes(name)) return v; } return CAT_ICONS_MAP['Infrastructure']; }
+
+// floorSortKey() — assigns a numeric sort key to floor names for logical building order.
+// Negative values = below ground; 0+ = above ground; 900+ = special locations.
+// Handles: "Cellar", "Basement", "Lower Level N" (negative N), "Lobby", "Mezzanine",
+// "Level N", "Floor N", numeric prefixes like "3rd Floor", "Roof", "Bulkhead", "Outdoor".
+function floorSortKey(f) {
+  if (!f || !f.trim()) return 999;
+  const fl = f.trim().toLowerCase();
+  if (fl === 'cellar' || fl === 'basement') return -2;
+  // "Lower Level N" → -N (subterranean: lower level 5 is deeper than lower level 4)
+  const llm = fl.match(/lower\s*level\s*(\d+)/); if (llm) return -parseInt(llm[1]);
+  if (fl.startsWith('lower') || fl.startsWith('-lower')) return -1;  // generic "lower level" without number
+  if (fl === 'outdoor') return 998; if (fl === 'roof') return 100; if (fl === 'bulkhead') return 101;
+  if (fl === 'lobby') return 1; if (fl === 'mezzanine') return 1.5;
+  const lm = fl.match(/level\s*(\d+)/); if (lm) return parseInt(lm[1]);   // "Level 3" → 3
+  const fm = fl.match(/floor\s*(\d+)/); if (fm) return parseInt(fm[1]);   // "Floor 3" → 3
+  const m = fl.match(/^(\d+)/); if (m) return parseInt(m[1]);             // "3rd Floor" → 3
+  const om = fl.match(/(\d+)/); if (om) return parseInt(om[1]);           // any embedded number
+  return 500;                                                              // unknown → middle
+}
+
+// parseTabLine() — parse a single tab-separated line, respecting quoted fields and escaped quotes ("").
+function parseTabLine(line) { const f = []; let c = '', q = false; for (let i = 0; i < line.length; i++) { const ch = line[i]; if (ch === '"') { if (q && i + 1 < line.length && line[i + 1] === '"') { c += '"'; i++; } else q = !q; } else if (ch === '\t' && !q) { f.push(c.trim()); c = ''; } else c += ch; } f.push(c.trim()); return f; }
+// parseDate() — parse a date string from CSV (may be quoted); returns Date or null.
+function parseDate(s) { if (!s || s === '""' || s === '') return null; const c = s.replace(/^"|"$/g, ''); if (!c) return null; const d = new Date(c); return isNaN(d.getTime()) ? null : d; }
+// formatDate() — short display format: "Jan 5, 26"
+function formatDate(d) { if (!d) return ''; const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return m[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear().toString().slice(2); }
+
+// parseMessage() — parse a raw Fieldwire message cell into structured form.
+// Returns { type, sender, text, url?, raw } where type is one of:
+//   'photo'     — HYPERLINK formula pointing to an image
+//   'status'    — "changed status to ..."
+//   'system'    — title/category/location/date changes, deletions
+//   'tag'       — "added tag" / "removed tag"
+//   'assign'    — "assigned" / "unassigned"
+//   'checklist' — checklist item changes
+//   'comment'   — user-written comment (default for "sender: text" format)
+function parseMessage(raw) {
+  // Check for Excel HYPERLINK formula (photo attachments in Fieldwire exports)
+  const hm = raw.match(/^=HYPERLINK\("([^"]+)",\s*"([^"]+)"\)$/i);
+  if (hm) { const url = hm[1]; const lbl = hm[2]; const ci = lbl.indexOf(':'); const sender = ci > 0 ? lbl.substring(0, ci).trim() : 'Unknown'; return { type: 'photo', sender, text: 'Picture link', url, raw }; }
+  // Try "Sender: message text" format (colon within first 40 chars)
+  const ci = raw.indexOf(':');
+  if (ci > 0 && ci < 40) {
+    const sender = raw.substring(0, ci).trim(), txt = raw.substring(ci + 1).trim();
+    const tl = txt.toLowerCase(); let type = 'comment';
+    // Classify by message prefix keywords
+    if (tl.startsWith('changed status') || tl.startsWith('changed priority') || tl.startsWith('renamed status')) type = 'status';
+    else if (tl.startsWith('changed title') || tl.startsWith('changed category') || tl.startsWith('changed location') || tl.startsWith('moved task')) type = 'system';
+    else if (tl.startsWith('added tag') || tl.startsWith('removed tag')) type = 'tag';
+    else if (tl.startsWith('assigned') || tl.startsWith('unassigned') || tl.startsWith('changed assignee')) type = 'assign';
+    else if (tl.startsWith('changed start date') || tl.startsWith('changed end date') || tl.startsWith('removed start')) type = 'system';
+    else if (tl.startsWith('added checklist') || tl.startsWith('checked off') || tl.startsWith('unchecked')) type = 'checklist';
+    else if (tl.startsWith('deleted a comment') || tl.startsWith('deleted comment')) type = 'system';
+    return { type, sender, text: txt, raw };
+  }
+  // No colon found — treat as system message
+  return { type: 'system', sender: 'System', text: raw, raw };
+}
+
+// extractPlanLink() — pull URL from HYPERLINK formula or plain URL string
+function extractPlanLink(raw) { if (!raw) return ''; const hm = raw.match(/^=HYPERLINK\("([^"]+)"/i); if (hm) return hm[1]; if (raw.match(/^https?:\/\//i)) return raw.trim(); return ''; }
+
+// parseCSVData() — main CSV parser. Handles Fieldwire CSV export format:
+//   1. Auto-detects encoding via BOM (UTF-16LE, UTF-16BE, or UTF-8 fallback)
+//   2. Finds header row by scanning first 10 lines for "ID\t..." pattern
+//   3. Extracts project name from lines before the header (skips dates/generated)
+//   4. Dynamically detects Message N, Tag N, Checklist N columns by regex
+//   5. Parses each data row into a task object with computed fields (_tags, _messages, etc.)
+//
+// The _underscore convention marks computed/derived fields added during parse.
+function parseCSVData(buffer) {
+  // Step 1: Detect encoding via Byte Order Mark (BOM)
+  let txt;
+  const view = new Uint8Array(buffer);
+  if (view[0] === 0xFF && view[1] === 0xFE) txt = new TextDecoder('utf-16le').decode(buffer);       // Fieldwire exports typically use UTF-16LE
+  else if (view[0] === 0xFE && view[1] === 0xFF) txt = new TextDecoder('utf-16be').decode(buffer);
+  else txt = new TextDecoder('utf-8').decode(buffer);
+
+  const lines = txt.split('\n');
+
+  // Step 2: Find header row (starts with "ID\t") within first 10 lines
+  let hi = -1;
+  for (let i = 0; i < Math.min(10, lines.length); i++) { if (lines[i].startsWith('ID\t')) { hi = i; break; } }
+  if (hi === -1) throw new Error('Could not find header row starting with "ID". This does not appear to be a Fieldwire CSV export.');
+
+  // Step 3: Extract project name from preamble lines (skip date stamps and "Generated" lines)
+  let projectName = '';
+  for (let i = 0; i < hi; i++) { const l = lines[i].trim(); if (!l || l.toLowerCase().startsWith('generated') || /^\d{4}-\d{2}-\d{2}/.test(l)) continue; projectName = l; break; }
+
+  const headers = lines[hi].split('\t').map(h2 => h2.trim());
+
+  // Step 3b: Validate required columns exist
+  const REQUIRED_COLS = ['ID', 'Title', 'Status', 'Category', 'Tier 1'];
+  const RECOMMENDED_COLS = ['Assignee', 'Plan', 'Created', 'Last Updated', 'X pos (%)', 'Y pos (%)'];
+  const headerSet = new Set(headers);
+  const missingRequired = REQUIRED_COLS.filter(c => !headerSet.has(c));
+  if (missingRequired.length > 0) {
+    const found = headers.filter(h2 => h2 && !(/^(Message|Tag|Checklist) \d+$/i.test(h2))).slice(0, 15);
+    throw new Error(
+      'CSV_SCHEMA_ERROR:' +
+      JSON.stringify({
+        missing: missingRequired,
+        required: REQUIRED_COLS,
+        recommended: RECOMMENDED_COLS.filter(c => !headerSet.has(c)),
+        found: found
+      })
+    );
+  }
+
+  // Step 4: Dynamic column detection — scan headers for variable-count columns.
+  // Different projects have different numbers of Message/Tag/Checklist columns
+  // (e.g., 150 Westchester has 52 messages + 14 tags; Vella Pietown has 17 + 3).
+  const msgCols = [], tagCols = [], clCols = [];
+  headers.forEach((h2, i) => {
+    if (/^Message \d+$/i.test(h2)) msgCols.push(i);
+    else if (/^Tag \d+$/i.test(h2)) tagCols.push(i);
+    else if (/^Checklist \d+$/i.test(h2)) clCols.push(i);
+  });
+
+  // Step 5: Parse data rows. Skip empty lines and non-numeric first fields (metadata lines).
+  const tasks = [];
+  for (let i = hi + 1; i < lines.length; i++) {
+    const line = lines[i]; if (!line || !line.trim()) continue;
+    // Quick check: first field must be numeric ID
+    const ft = line.indexOf('\t'); const ff = ft > 0 ? line.substring(0, ft).trim() : line.trim();
+    if (!/^\d+$/.test(ff)) continue;
+
+    const fields = parseTabLine(line); const task = {};
+    // Map raw header→value pairs
+    for (let j = 0; j < headers.length && j < fields.length; j++) task[headers[j]] = fields[j];
+
+    // Collect tags from dynamic tag columns
+    task._tags = [];
+    tagCols.forEach(idx => { const tag = fields[idx]; if (tag && tag.trim()) task._tags.push(tag.trim()); });
+
+    // Computed fields (prefixed with _) for quick access in views
+    task._id = parseInt(task['ID']) || 0; task._title = task['Title'] || ''; task._status = task['Status'] || '';
+    task._category = (task['Category'] || '').trim(); task._assignee = task['Assignee'] || '';
+    task._floor = (task['Tier 1'] || '').trim(); task._plan = (task['Plan'] || '').trim();
+    task._created = task['Created'] || ''; task._updated = task['Last Updated'] || '';
+    task._catClean = task._category.replace(/^\s*\d+-\s*/, '');   // Strip leading "N- " prefix from category name
+    task._xPos = parseFloat(task['X pos (%)']) || 0;               // Floor plan pin X position (0-100%)
+    task._yPos = parseFloat(task['Y pos (%)']) || 0;               // Floor plan pin Y position (0-100%)
+    task._planLink = extractPlanLink(task['Plan Link'] || '');
+
+    // Collect and parse messages from dynamic message columns
+    task._messages = [];
+    msgCols.forEach(idx => { const msg = fields[idx]; if (msg && msg.trim()) task._messages.push(parseMessage(msg.trim())); });
+    tasks.push(task);
+  }
+  return { tasks, projectName };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 10. Signals & State — all reactive state declarations
+//
+// All mutable app state is held in signals. Views subscribe via effects.
+// Computed signals derive aggregated data from raw state.
+// ═══════════════════════════════════════════════════════════════
+
+const rawTasks = signal([]);       // All parsed tasks from CSV (unfiltered source of truth)
+const filters = signal({ status: null, category: null, floor: null, tag: null, search: '' }); // Active global filters
+const columnFilters = signal({});  // Per-column filters from table header dropdowns: { colKey: Set<value> }
+const sortState = signal({ col: null, dir: 1 });  // Table sort: col=field key, dir=1(asc)/-1(desc)
+const currentPage = signal(0);     // Table pagination: zero-based page index
+const selectedPlan = signal(null); // Currently selected floor plan name for the plan viewer
+const expandedFloors = signal(new Set());  // Set of floor names with expanded task lists in heatmap
+const chatState = signal({ open: false, taskId: null, filter: 'all' }); // Chat modal state
+
+let STATUS_MAP = {};   // Built once on CSV load: { statusName → { label, cls, short, colorIdx } }
+let STATUS_ORDER = []; // Status names sorted by classification (green → amber → red)
+let planMap = {};      // { planName → { url } } — floor plan image URLs extracted from tasks
+const PAGE_SIZE = 50;  // Tasks per page in the data table
+let openColFilter = null; // Currently open column filter dropdown (null = none)
+
+// cv() — read a CSS custom property value from :root (theme-aware)
+function cv(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+// statusColor() — get the fill color for a status (green/amber/red from CSS vars)
+function statusColor(s) { const ci = typeof s === 'string' ? classifyStatus(s) : s; return [cv('--green'), cv('--amber'), cv('--red')][ci] || '#888'; }
+// statusColorDark() — darker variant for pins, dots, and text
+function statusColorDark(s) { const ci = typeof s === 'string' ? classifyStatus(s) : s; return [cv('--green-dark'), cv('--amber-dark'), cv('--red-dark')][ci] || '#888'; }
+
+// buildStatusConfig() — called once after CSV parse. Discovers all unique statuses,
+// classifies each, and builds STATUS_MAP (for display) and STATUS_ORDER (sorted list).
+function buildStatusConfig(tasks) {
+  const statuses = [...new Set(tasks.map(t => t._status))].filter(Boolean);
+  const clsNames = ['status-tested', 'status-cable', 'status-open']; // CSS classes for green/amber/red
+  STATUS_MAP = {}; STATUS_ORDER = [];
+  statuses.forEach(s => { const ci = classifyStatus(s); const short = s.length > 20 ? s.slice(0, 18) + '\u2026' : s; STATUS_MAP[s] = { label: s, cls: clsNames[ci], short, colorIdx: ci }; });
+  STATUS_ORDER = statuses.sort((a, b) => classifyStatus(a) - classifyStatus(b));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 11. URL State Sync — filters ↔ URL params, popstate
+//
+// Enables shareable/bookmarkable filter state via query string.
+// Short param names to keep URLs compact:
+//   s=status, c=category, f=floor, g=tag, q=search, o=sort-col, d=sort-dir, p=page
+// Uses replaceState (not pushState) to avoid polluting browser history
+// with every filter change. Debounced at 300ms to batch rapid changes.
+// ═══════════════════════════════════════════════════════════════
+const PARAM_MAP = { s: 'status', c: 'category', f: 'floor', g: 'tag', q: 'search' };
+const PARAM_REV = Object.fromEntries(Object.entries(PARAM_MAP).map(([k, v]) => [v, k]));
+
+// filtersToURL() — serialize current filter/sort/page state to query string
+function filtersToURL() {
+  const f = filters.peek(), ss = sortState.peek(), p = currentPage.peek();
+  const params = new URLSearchParams();
+  if (f.status) params.set('s', f.status);
+  if (f.category) params.set('c', f.category);
+  if (f.floor) params.set('f', f.floor);
+  if (f.tag) params.set('g', f.tag);
+  if (f.search) params.set('q', f.search);
+  if (ss.col) { params.set('o', ss.col); params.set('d', ss.dir); }
+  if (p > 0) params.set('p', p);
+  return params.toString();
+}
+
+// urlToFilters() — deserialize query string back into filter/sort/page objects
+function urlToFilters() {
+  const params = new URLSearchParams(location.search);
+  const f = { status: params.get('s') || null, category: params.get('c') || null, floor: params.get('f') || null, tag: params.get('g') || null, search: params.get('q') || '' };
+  const col = params.get('o') || null, dir = parseInt(params.get('d')) || 1;
+  const p = parseInt(params.get('p')) || 0;
+  return { filters: f, sort: { col, dir }, page: p };
+}
+
+// Debounced URL update — avoids rapid replaceState calls during typing/clicking
+let _urlTimer = null;
+function syncURLFromState() {
+  clearTimeout(_urlTimer);
+  _urlTimer = setTimeout(() => {
+    const qs = filtersToURL();
+    const newUrl = qs ? '?' + qs : location.pathname;
+    if (location.search !== (qs ? '?' + qs : '')) history.replaceState(null, '', newUrl);
+  }, 300);
+}
+
+// Restore state when user navigates back/forward (browser back button)
+window.addEventListener('popstate', () => {
+  if (rawTasks.peek().length === 0) return; // no data loaded yet
+  const restored = urlToFilters();
+  batch(() => {
+    filters.set(restored.filters);
+    sortState.set(restored.sort);
+    currentPage.set(restored.page);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════
+// 12. Computed Layer — aggregation cache
+//
+// Each computed runs ONCE per filter change. Multiple views can read the same
+// computed without re-aggregating. This is the key performance improvement
+// over the old approach (each render function filtered/counted independently).
+//
+// Dependency chain: rawTasks → filteredTasks → statusCounts, floorAgg, etc.
+//                   filters ──↗              ↗
+//                   columnFilters ──────────↗
+// ═══════════════════════════════════════════════════════════════
+
+// getColFilterValue() — extract the filterable value for a given column from a task.
+// Returns string or string[] (for tags). Used by both filteredTasks and column filter UI.
+function getColFilterValue(t, col) {
+  switch (col) {
+    case '_id': return String(t._id); case '_title': return t._title; case '_status': return t._status;
+    case '_catClean': return t._catClean; case '_floor': return t._floor || '(none)';
+    case '_assignee': return t._assignee ? t._assignee.split('@')[0] : '(none)';
+    case '_created': { const d = parseDate(t._created); return d ? formatDate(d) : ''; }
+    case '_updated': { const d = parseDate(t._updated); return d ? formatDate(d) : ''; }
+    case '_tags': return t._tags.length ? t._tags : ['(none)'];
+    default: return '';
+  }
+}
+
+// filteredTasks — the core derived dataset. Applies global filters (status, category,
+// floor, tag, search) AND per-column table filters. Every view reads from this.
+const filteredTasks = computed(() => {
+  const all = rawTasks.get(), f = filters.get(), cf = columnFilters.get();
+  return all.filter(t => {
+    // Global filters — exact match for status/category/floor; includes for tag
+    if (f.status && t._status !== f.status) return false;
+    if (f.category && t._category !== f.category) return false;
+    if (f.floor && t._floor !== f.floor) return false;
+    if (f.tag && !t._tags.includes(f.tag)) return false;
+    // Full-text search — searches across all fields including messages
+    if (f.search) { const q = f.search.toLowerCase(); if (!(t._id + ' ' + t._title + ' ' + t._status + ' ' + t._category + ' ' + t._floor + ' ' + t._assignee + ' ' + t._tags.join(' ') + ' ' + (t._plan || '') + ' ' + t._messages.map(m => m.text || '').join(' ')).toLowerCase().includes(q)) return false; }
+    // Column filters — per-column inclusion sets from table header dropdowns
+    for (const [col, vals] of Object.entries(cf)) { if (!vals || vals.size === 0) continue; const v = getColFilterValue(t, col); if (Array.isArray(v)) { if (!v.some(x => vals.has(x))) return false; } else { if (!vals.has(v)) return false; } }
+    return true;
+  });
+});
+
+// statusCounts — per-status count + green/amber/red totals. Used by KPIs + donut chart.
+const statusCounts = computed(() => {
+  const tasks = filteredTasks.get(), counts = {}, green = { n: 0 }, amber = { n: 0 }, red = { n: 0 };
+  STATUS_ORDER.forEach(s => counts[s] = 0);
+  tasks.forEach(t => { counts[t._status] = (counts[t._status] || 0) + 1; const ci = classifyStatus(t._status); if (ci === 0) green.n++; else if (ci === 1) amber.n++; else red.n++; });
+  return { counts, green: green.n, amber: amber.n, red: red.n, total: tasks.length };
+});
+
+// categoryAgg — per-category breakdown with green/amber/red counts.
+// Filters all tasks EXCEPT category filter (so you can see all categories when one is selected).
+// Sorted by total count (largest first). Used by the category bar chart.
+const categoryAgg = computed(() => {
+  const all = rawTasks.get(), f = filters.get();
+  const categories = [...new Set(all.map(t => t._category))].filter(Boolean).sort();
+  // Apply all filters except category (so category section shows all categories)
+  const tasksForCat = all.filter(t => {
+    if (f.status && t._status !== f.status) return false;
+    if (f.floor && t._floor !== f.floor) return false;
+    if (f.tag && !t._tags.includes(f.tag)) return false;
+    if (f.search) { const q = f.search.toLowerCase(); if (!(t._id + ' ' + t._title + ' ' + t._status + ' ' + t._category + ' ' + t._floor + ' ' + t._assignee + ' ' + t._tags.join(' ')).toLowerCase().includes(q)) return false; }
+    return true;
+  });
+  return categories.map((c, i) => {
+    const ct = tasksForCat.filter(t => t._category === c);
+    return { category: c, label: c.replace(/^\s*\d+-\s*/, ''), green: ct.filter(t => classifyStatus(t._status) === 0).length, amber: ct.filter(t => classifyStatus(t._status) === 1).length, red: ct.filter(t => classifyStatus(t._status) === 2).length, total: ct.length, colorKey: CAT_COLORS_KEYS[i % CAT_COLORS_KEYS.length] };
+  }).filter(d => d.total > 0).sort((a, b) => b.total - a.total);
+});
+
+// floorAgg — per-floor breakdown. Shared by heatmap AND gantt chart (no duplicate computation).
+// Sorted by floor sort key (roof at top → basement at bottom). Excludes "Network Schedule".
+const floorAgg = computed(() => {
+  const tasks = filteredTasks.get();
+  const floors = [...new Set(tasks.map(t => t._floor))].filter(f => f && f.trim() && f.trim().toLowerCase() !== 'network schedule').sort((a, b) => floorSortKey(b) - floorSortKey(a));
+  return floors.map(f => {
+    const ft = tasks.filter(t => t._floor === f);
+    return { floor: f, green: ft.filter(t => classifyStatus(t._status) === 0).length, amber: ft.filter(t => classifyStatus(t._status) === 1).length, red: ft.filter(t => classifyStatus(t._status) === 2).length, total: ft.length, tasks: ft };
+  }).filter(d => d.total > 0);
+});
+
+// assigneeAgg — per-assignee task counts by status. Sorted by total (busiest first).
+const assigneeAgg = computed(() => {
+  const tasks = filteredTasks.get(), asg = {};
+  tasks.forEach(t => { const a = t._assignee || '(unassigned)'; if (!asg[a]) asg[a] = { tested: 0, cable: 0, open: 0, total: 0 }; asg[a].total++; const ci = classifyStatus(t._status); if (ci === 0) asg[a].tested++; else if (ci === 1) asg[a].cable++; else asg[a].open++; });
+  return Object.entries(asg).sort((a, b) => b[1].total - a[1].total);
+});
+
+// tagCounts — tag name → count, sorted by frequency. Used by tag cloud.
+const tagCounts = computed(() => {
+  const tasks = filteredTasks.get(), tc = {};
+  tasks.forEach(t => { t._tags.forEach(tag => { tc[tag] = (tc[tag] || 0) + 1; }); });
+  return Object.entries(tc).sort((a, b) => b[1] - a[1]);
+});
+
+// timelineData — cumulative task creation counts by date. Used by the SVG timeline chart.
+// Groups by YYYY-MM-DD, then builds running cumulative total.
+const timelineData = computed(() => {
+  const tasks = filteredTasks.get(), dc = {};
+  tasks.forEach(t => { const d = parseDate(t._created); if (!d) return; const k = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); dc[k] = (dc[k] || 0) + 1; });
+  const dates = Object.keys(dc).sort(); let cum = [], run = 0;
+  dates.forEach(d => { run += dc[d]; cum.push({ date: d, count: run }); });
+  return cum;
+});
+
+// tablePage — sorted + paginated slice for the data table.
+// Applies multi-column sorting (ID numeric, dates temporal, floors by sort key, rest alphabetic).
+// Returns: { sorted, page, totalPages, start, end, totalCount } for the current page.
+const tablePage = computed(() => {
+  let sorted = [...filteredTasks.get()];
+  const ss = sortState.get();
+  if (ss.col !== null) {
+    sorted.sort((a, b) => {
+      let va = a[ss.col], vb = b[ss.col];
+      if (ss.col === '_id') return (va - vb) * ss.dir;                       // numeric sort
+      if (ss.col === '_created' || ss.col === '_updated') return ((parseDate(va) || 0) - (parseDate(vb) || 0)) * ss.dir;  // temporal sort
+      if (ss.col === '_floor') return (floorSortKey(va) - floorSortKey(vb)) * ss.dir;  // building-order sort
+      if (Array.isArray(va)) va = va.join(' '); if (Array.isArray(vb)) vb = vb.join(' ');
+      return String(va || '').localeCompare(String(vb || '')) * ss.dir;       // alphabetic sort
+    });
+  }
+  const p = currentPage.get(), tp = Math.ceil(sorted.length / PAGE_SIZE);
+  return { sorted, page: sorted.slice(p * PAGE_SIZE, (p + 1) * PAGE_SIZE), totalPages: tp, start: sorted.length > 0 ? p * PAGE_SIZE + 1 : 0, end: Math.min((p + 1) * PAGE_SIZE, sorted.length), totalCount: sorted.length };
+});
+
+// ═══════════════════════════════════════════════════════════════
+// 13. View Functions
+//
+// Each render function reads from one or more computed signals and updates
+// a specific DOM section. They are wired via effects in Section 15 so that
+// only affected views re-render when state changes.
+//
+// Convention: all use innerHTML (string concat) for simplicity since this is
+// a visualization dashboard with no user-editable form fields to preserve.
+// User-derived text is escaped via escHtml() to prevent XSS.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── KPIs ───
+// Renders 4 summary cards: Not Started (red), In Progress (amber),
+// Completed (green with ring chart), Total Tasks. Each shows counts,
+// status labels, and a progress bar.
+function renderKPIs() {
+  const sc = statusCounts.get(), total = sc.total, done = sc.green, prog = sc.amber, open = sc.red;
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+  const tasks = filteredTasks.get();
+  const floors = new Set(tasks.map(t => t._floor).filter(Boolean)).size;
+  const cats = new Set(tasks.map(t => t._category).filter(Boolean)).size;
+  const circ = 2 * Math.PI * 38, dash = (circ * pct / 100).toFixed(1);
+  const doneLabels = STATUS_ORDER.filter(s => classifyStatus(s) === 0).map(s => (STATUS_MAP[s] || { short: s }).short);
+  const progLabels = STATUS_ORDER.filter(s => classifyStatus(s) === 1).map(s => (STATUS_MAP[s] || { short: s }).short);
+  const openLabels = STATUS_ORDER.filter(s => classifyStatus(s) === 2).map(s => (STATUS_MAP[s] || { short: s }).short);
+  document.getElementById('kpi-row').innerHTML = `
+    <div class="card kpi" role="status" aria-label="${open} tasks not started">
+      <div class="kpi-icon" style="background:var(--red-bg)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--red-dark)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+      <div class="value" style="color:var(--red-text)">${open}</div>
+      <div class="label">Not Started</div>
+      <div class="sub">${openLabels.join(', ') || 'Open / Awaiting'}</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:${total ? Math.round(open / total * 100) : 0}%;background:var(--red)"></div></div>
+    </div>
+    <div class="card kpi" role="status" aria-label="${prog} tasks in progress">
+      <div class="kpi-icon" style="background:var(--amber-bg)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--amber-dark)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="value" style="color:var(--amber-text)">${prog}</div>
+      <div class="label">In Progress</div>
+      <div class="sub">${progLabels.join(', ') || 'In progress'}</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:${total ? Math.round(prog / total * 100) : 0}%;background:var(--amber)"></div></div>
+    </div>
+    <div class="card kpi" role="status" aria-label="${pct}% completed">
+      <div class="progress-ring"><svg width="96" height="96"><circle cx="48" cy="48" r="38" fill="none" stroke="var(--surface2)" stroke-width="7"/><circle cx="48" cy="48" r="38" fill="none" stroke="var(--green-dark)" stroke-width="7" stroke-dasharray="${dash} ${circ.toFixed(1)}" stroke-linecap="round" style="transition:stroke-dasharray .6s ease"/></svg><div class="pct" style="color:var(--green-text)">${pct}%</div></div>
+      <div class="label">Completed</div>
+      <div class="sub">${done} ${doneLabels.join(', ') || 'completed'}</div>
+    </div>
+    <div class="card kpi" role="status" aria-label="${total} total tasks">
+      <div class="kpi-icon" style="background:var(--accent-bg)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+      <div class="value">${total}</div>
+      <div class="label">Total Tasks</div>
+      <div class="sub">${floors} floors \u00b7 ${cats} categories</div>
+    </div>`;
+}
+
+// ─── Filter Bar ───
+// Builds interactive pill buttons for status/category filters, a floor dropdown,
+// and tag pills. Each pill uses data-action attrs for event delegation.
+function renderFilterBar() {
+  const bar = document.getElementById('filter-bar');
+  const all = rawTasks.peek(), f = filters.get();
+  const statuses = [...new Set(all.map(t => t._status))].sort((a, b) => STATUS_ORDER.indexOf(a) - STATUS_ORDER.indexOf(b));
+  const categories = [...new Set(all.map(t => t._category))].filter(Boolean).sort();
+  const floors = [...new Set(all.map(t => t._floor))].filter(Boolean).sort((a, b) => floorSortKey(a) - floorSortKey(b));
+  let html = '<label>Status</label>';
+  statuses.forEach(s => { const info = STATUS_MAP[s] || { label: s }; const cnt = all.filter(t => t._status === s).length; html += `<span class="pill${f.status === s ? ' active' : ''}" role="button" tabindex="0" aria-pressed="${f.status === s}" data-action="filter-status" data-value="${escHtml(s)}"><span class="dot" style="background:${statusColorDark(s)}"></span>${info.label}<span class="pill-count">${cnt}</span></span>`; });
+  html += '<span class="filter-sep"></span><label>Category</label>';
+  categories.forEach((c, i) => { const l = c.replace(/^\s*\d+-\s*/, ''); const cnt = all.filter(t => t._category === c).length; html += `<span class="pill${f.category === c ? ' active' : ''}" role="button" tabindex="0" aria-pressed="${f.category === c}" data-action="filter-category" data-value="${escHtml(c)}"><span class="dot" style="background:${cv(CAT_COLORS_KEYS[i % CAT_COLORS_KEYS.length])}"></span>${l}<span class="pill-count">${cnt}</span></span>`; });
+  html += '<span class="filter-sep"></span><label>Floor</label><select class="filter-select" data-action="filter-floor-select"><option value="">All Floors</option>';
+  floors.forEach(fl => { html += `<option value="${fl}"${f.floor === fl ? ' selected' : ''}>${fl}</option>`; }); html += '</select>';
+  if (f.tag) html += `<span class="filter-sep"></span><span class="pill active" role="button" tabindex="0" data-action="clear-tag">Tag: ${f.tag} \u00d7</span>`;
+  bar.innerHTML = html;
+}
+
+// ─── Donut Chart (SVG) ───
+// SVG donut replacing the old canvas chart. Each status segment is a <path>
+// with data-action="filter-status" — native click targets, no angle math needed at click time.
+// The donut ring is drawn as the space between outer radius (oR) and inner radius (iR).
+function renderDonut() {
+  const container = document.getElementById('donut-section');
+  const sc = statusCounts.get(), total = sc.total || 1;
+  const cx = 130, cy = 125, oR = 95, iR = 60; // center, outer radius, inner radius
+  let sa = -Math.PI / 2;  // start angle at 12-o'clock (-90° in radians)
+  const gap = 0.03;  // small gap in radians between segments
+  const active = STATUS_ORDER.filter(s => sc.counts[s] > 0);
+  let paths = '';
+  active.forEach(s => {
+    const pct = sc.counts[s] / total;
+    const sw = pct * 2 * Math.PI - (active.length > 1 ? gap : 0); // sweep angle in radians
+    const ea = sa + sw;  // end angle
+    // Calculate outer arc endpoints (clockwise from sa to ea)
+    const x1o = cx + oR * Math.cos(sa), y1o = cy + oR * Math.sin(sa);
+    const x2o = cx + oR * Math.cos(ea), y2o = cy + oR * Math.sin(ea);
+    // Calculate inner arc endpoints (counter-clockwise from ea back to sa)
+    const x1i = cx + iR * Math.cos(ea), y1i = cy + iR * Math.sin(ea);
+    const x2i = cx + iR * Math.cos(sa), y2i = cy + iR * Math.sin(sa);
+    const large = sw > Math.PI ? 1 : 0; // SVG large-arc-flag
+    // Path: outer arc CW → line to inner → inner arc CCW → close
+    const d = `M${x1o},${y1o} A${oR},${oR} 0 ${large} 1 ${x2o},${y2o} L${x1i},${y1i} A${iR},${iR} 0 ${large} 0 ${x2i},${y2i} Z`;
+    paths += `<path d="${d}" fill="${statusColor(s)}" data-action="filter-status" data-value="${escHtml(s)}" aria-label="${(STATUS_MAP[s] || { label: s }).label}: ${sc.counts[s]}"><title>${(STATUS_MAP[s] || { label: s }).label}: ${sc.counts[s]} (${Math.round(sc.counts[s] / total * 100)}%)</title></path>`;
+    sa = ea + gap;
+  });
+  const svgHtml = `<svg class="donut-svg" viewBox="0 0 260 250" width="260" height="250" role="img" aria-label="Status breakdown donut chart">${paths}<text x="${cx}" y="${cy - 4}" text-anchor="middle" dominant-baseline="central" fill="var(--text)" font-weight="800" font-size="28">${filteredTasks.peek().length}</text><text x="${cx}" y="${cy + 18}" text-anchor="middle" fill="var(--text3)" font-size="12">tasks</text></svg>`;
+  const legendHtml = STATUS_ORDER.map(s => { const info = STATUS_MAP[s] || { label: s }; return `<span class="legend-item" role="button" tabindex="0" data-action="filter-status" data-value="${escHtml(s)}"><span class="swatch" style="background:${statusColor(s)}"></span>${info.label}: ${sc.counts[s] || 0} (${Math.round((sc.counts[s] || 0) / total * 100)}%)</span>`; }).join('');
+  container.innerHTML = svgHtml + '<div class="legend">' + legendHtml + '</div>';
+}
+
+// ─── Category Section ───
+function renderCategorySection() {
+  const container = document.getElementById('category-section');
+  const data = categoryAgg.get();
+  let html = '';
+  data.forEach(d => {
+    const icon = getCatIcon(d.label), color = cv(d.colorKey);
+    const pT = d.green / d.total * 100, pC = d.amber / d.total * 100, pO = d.red / d.total * 100;
+    html += `<div class="cat-row" role="button" tabindex="0" data-action="filter-category" data-value="${escHtml(d.category)}">
+      <div class="cat-icon" style="background:${color}15;color:${color}">${icon}</div>
+      <div class="cat-label">${d.label}</div>
+      <div class="cat-bar-wrap">
+        ${d.green ? `<div class="cat-bar-seg cb-pattern-green" style="width:${pT}%;background:var(--green)">${d.green >= 3 ? `<span>${d.green}</span>` : ''}</div>` : ''}
+        ${d.amber ? `<div class="cat-bar-seg cb-pattern-amber" style="width:${pC}%;background:var(--amber)">${d.amber >= 3 ? `<span>${d.amber}</span>` : ''}</div>` : ''}
+        ${d.red ? `<div class="cat-bar-seg" style="width:${pO}%;background:var(--red)">${d.red >= 3 ? `<span>${d.red}</span>` : ''}</div>` : ''}
+      </div>
+      <div class="cat-total">${d.total}</div>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+// ─── Floor Heatmap ───
+// Expandable floor-by-floor view with stacked green/amber/red bars.
+// Clicking a floor row toggles a nested task table. Uses expandedFloors signal.
+function renderFloorHeatmap() {
+  const container = document.getElementById('floor-heatmap');
+  const data = floorAgg.get(), expanded = expandedFloors.get();
+  const maxT = Math.max(...data.map(d => d.total), 1);
+  const chatSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>';
+  let html = '';
+  data.forEach(d => {
+    const w = d.total / maxT * 100, pT = d.green / d.total * 100, pC = d.amber / d.total * 100, pO = d.red / d.total * 100;
+    const cp = Math.round(d.green / d.total * 100), isExpanded = expanded.has(d.floor);
+    html += `<div class="heatmap-row" data-action="toggle-floor" data-value="${escHtml(d.floor)}">
+      <span class="heatmap-expand${isExpanded ? ' open' : ''}" aria-hidden="true">&#9654;</span>
+      <span class="heatmap-label">${d.floor}</span>
+      <div class="heatmap-bar" style="width:${Math.max(w, 8)}%">
+        ${d.green ? `<div class="heatmap-seg cb-pattern-green" style="width:${pT}%;background:var(--green)">${d.green >= 3 ? `<span class="count-label">${d.green}</span>` : ''}</div>` : ''}
+        ${d.amber ? `<div class="heatmap-seg cb-pattern-amber" style="width:${pC}%;background:var(--amber)">${d.amber >= 3 ? `<span class="count-label">${d.amber}</span>` : ''}</div>` : ''}
+        ${d.red ? `<div class="heatmap-seg" style="width:${pO}%;background:var(--red)">${d.red >= 3 ? `<span class="count-label">${d.red}</span>` : ''}</div>` : ''}
+      </div>
+      <span class="heatmap-total">${d.total}</span>
+      <span class="heatmap-pct" style="color:${cp >= 70 ? 'var(--green-text)' : cp >= 40 ? 'var(--amber-text)' : 'var(--red-text)'}">${cp}%</span>
+    </div>`;
+    html += `<div class="floor-nested${isExpanded ? ' open' : ''}"><div class="floor-nested-inner"><table><thead><tr><th>ID</th><th>Title</th><th>Status</th><th>Category</th><th>Tags</th></tr></thead><tbody>`;
+    d.tasks.sort((a, b) => a._id - b._id).forEach(t => {
+      const si = STATUS_MAP[t._status] || { cls: '', short: t._status };
+      const nCB = t._messages && t._messages.length ? `<button class="chat-icon-btn" data-action="open-chat" data-task-id="${t._id}" title="${t._messages.length} msgs">${chatSvg}</button>` : '';
+      html += `<tr><td style="color:var(--text3)">${t._id}</td><td>${nCB}${escHtml(t._title)}</td><td><span class="status-badge ${si.cls}"><span class="status-dot"></span>${si.short || si.label}</span></td><td>${t._catClean}</td><td>${t._tags.slice(0, 3).map(tag => `<span class="tag-badge">${escHtml(tag)}</span>`).join('')}</td></tr>`;
+    });
+    html += '</tbody></table></div></div>';
+  });
+  container.innerHTML = html;
+}
+
+// ─── Timeline (SVG) ───
+// SVG area chart showing cumulative task creation over time.
+// Uses viewBox for scaling + ResizeObserver for responsive width.
+// Replaces the old canvas-based chart.
+let _timelineRO = null; // ResizeObserver instance (created once, persists)
+function renderTimeline() {
+  const container = document.getElementById('timeline-section');
+  const data = timelineData.get();
+  const w = container.clientWidth || 500, ht = 240; // chart dimensions
+  if (!data.length) { container.innerHTML = `<svg viewBox="0 0 ${w} ${ht}" class="timeline-svg"><text x="${w / 2}" y="${ht / 2}" text-anchor="middle" fill="var(--chart-sub)" font-size="12">No date data</text></svg>`; return; }
+  const maxY = data[data.length - 1].count; // Y-axis max = final cumulative count
+  // Padding: Left(Y-axis labels), Right, Top, Bottom(X-axis labels). cW/cH = chart area dimensions.
+  const pL = 48, pR = 20, pT = 16, pB = 36, cW = w - pL - pR, cH = ht - pT - pB;
+  const pts = data.map((p, i) => {
+    const x = pL + (i / Math.max(data.length - 1, 1)) * cW;
+    const y = pT + cH - (p.count / maxY) * cH;
+    return { x, y, date: p.date, count: p.count };
+  });
+  const polyPoints = pts.map(p => `${p.x},${p.y}`).join(' ');
+  const areaPoints = `${pL},${pT + cH} ${polyPoints} ${pts[pts.length - 1].x},${pT + cH}`;
+  // Grid lines
+  let gridLines = '';
+  for (let i = 0; i <= 4; i++) {
+    const y = pT + (cH / 4) * i, val = Math.round(maxY - (maxY / 4) * i);
+    gridLines += `<line x1="${pL}" y1="${y}" x2="${w - pR}" y2="${y}" stroke="var(--chart-grid)" stroke-width="1"/>`;
+    gridLines += `<text x="${pL - 8}" y="${y + 4}" text-anchor="end" fill="var(--chart-sub)" font-size="10">${val}</text>`;
+  }
+  // Date labels
+  const mos = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const lI = Math.max(1, Math.floor(data.length / 5));
+  let dateLabels = '';
+  pts.forEach((p, i) => { if (i % lI === 0 || i === pts.length - 1) { const ps = p.date.split('-'); dateLabels += `<text x="${p.x}" y="${ht - pB + 18}" text-anchor="middle" fill="var(--chart-sub)" font-size="10">${mos[parseInt(ps[1]) - 1]} ${parseInt(ps[2])}</text>`; } });
+  // Dots
+  const dots = pts.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4" fill="var(--chart-dot-fill)" stroke="var(--chart-line)" stroke-width="2"><title>${p.date}: ${p.count}</title></circle>`).join('');
+  container.innerHTML = `<svg viewBox="0 0 ${w} ${ht}" class="timeline-svg" role="img" aria-label="Tasks created over time">${gridLines}<defs><linearGradient id="tl-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--chart-area-top)"/><stop offset="100%" stop-color="var(--chart-area-bot)"/></linearGradient></defs><polygon points="${areaPoints}" fill="url(#tl-grad)"/><polyline points="${polyPoints}" fill="none" stroke="var(--chart-line)" stroke-width="2.5" stroke-linejoin="round"/>${dots}${dateLabels}</svg>`;
+  // ResizeObserver for responsive
+  if (!_timelineRO) {
+    _timelineRO = new ResizeObserver(() => { if (rawTasks.peek().length) renderTimeline(); });
+    _timelineRO.observe(container);
+  }
+}
+
+// ─── Assignees ───
+// Renders assignee rows with avatar (initials), name, email, mini stacked bar,
+// and per-status task counts. Sorted by total tasks (busiest first).
+function renderAssignees() {
+  const container = document.getElementById('assignee-section');
+  const rows = assigneeAgg.get();
+  let html = '';
+  rows.forEach(([name, d]) => {
+    const parts = name.split('@'); const display = parts[0].replace(/\./g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const initials = display.split(' ').map(w => w[0]).join('').slice(0, 2);
+    html += `<div class="assignee-row"><div class="assignee-avatar">${initials}</div><div class="assignee-info"><div class="assignee-name">${escHtml(display)}</div><div class="assignee-email">${escHtml(name)}</div></div><div class="mini-bar"><span style="width:${d.tested / d.total * 100}%;background:var(--green)"></span><span style="width:${d.cable / d.total * 100}%;background:var(--amber)"></span><span style="width:${d.open / d.total * 100}%;background:var(--red)"></span></div><div class="assignee-stats"><div class="assignee-stat"><div class="num" style="color:var(--green-text)">${d.tested}</div><div class="lbl">Done</div></div><div class="assignee-stat"><div class="num" style="color:var(--amber-text)">${d.cable}</div><div class="lbl">Prog</div></div><div class="assignee-stat"><div class="num" style="color:var(--red-text)">${d.open}</div><div class="lbl">Open</div></div><div class="assignee-stat"><div class="num">${d.total}</div><div class="lbl">Total</div></div></div></div>`;
+  });
+  container.innerHTML = html;
+}
+
+// ─── Tag Cloud ───
+// Clickable tag pills with count badges. Active tag filter is highlighted.
+function renderTagCloud() {
+  const container = document.getElementById('tag-cloud');
+  const tags = tagCounts.get(), f = filters.get();
+  container.innerHTML = tags.map(([tag, count]) => `<span class="tag-item${f.tag === tag ? ' active' : ''}" role="button" tabindex="0" aria-pressed="${f.tag === tag}" data-action="filter-tag" data-value="${escHtml(tag)}">${escHtml(tag)}<span class="tag-count">${count}</span></span>`).join('');
+}
+
+// ─── Table ───
+// Sortable, paginated data table with per-column filter dropdowns and resizable headers.
+// TABLE_COLS defines column config: key (task field), label, width, and whether it's filterable.
+const TABLE_COLS = [
+  { key: '_id', label: 'ID', w: '52px', filterable: false },
+  { key: '_title', label: 'Title', w: '260px', filterable: false },
+  { key: '_status', label: 'Status', w: '155px', filterable: true },
+  { key: '_catClean', label: 'Category', w: '125px', filterable: true },
+  { key: '_floor', label: 'Floor', w: '72px', filterable: true },
+  { key: '_assignee', label: 'Assignee', w: '130px', filterable: true },
+  { key: '_created', label: 'Created', w: '95px', filterable: false },
+  { key: '_updated', label: 'Updated', w: '95px', filterable: false },
+  { key: '_tags', label: 'Tags', w: '220px', filterable: true }
+];
+
+function renderTable() {
+  const tp = tablePage.get(), ss = sortState.get(), cf = columnFilters.get();
+  const fSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>';
+  const chatSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>';
+  document.getElementById('table-head').innerHTML = TABLE_COLS.map(c => {
+    const isSorted = ss.col === c.key;
+    const arrow = isSorted ? (ss.dir === 1 ? '&#9650;' : '&#9660;') : '&#8597;';
+    const hasF = cf[c.key] && cf[c.key].size > 0;
+    let fb = '';
+    if (c.filterable) fb = `<span class="filter-icon${hasF ? ' has-filter' : ''}" data-action="toggle-col-filter" data-col="${c.key}" title="Filter ${c.label}">${fSvg}</span>`;
+    return `<th class="${isSorted ? 'sorted' : ''}" style="${c.w ? 'width:' + c.w : ''};position:relative" ${isSorted ? `aria-sort="${ss.dir === 1 ? 'ascending' : 'descending'}"` : ''}>${fb}<span class="th-content" data-action="sort-table" data-col="${c.key}">${c.label}<span class="sort-arrow">${arrow}</span></span><div class="col-filter-dropdown" id="cfd-${c.key}"></div><div class="th-resize" data-action="col-resize"></div></th>`;
+  }).join('');
+  renderActiveColFilters();
+  document.getElementById('table-info').textContent = `${tp.start}\u2013${tp.end} of ${tp.totalCount} tasks`;
+  document.getElementById('table-body').innerHTML = tp.page.map(t => {
+    const si = STATUS_MAP[t._status] || { cls: '', short: t._status };
+    const chatBtn = t._messages && t._messages.length ? `<button class="chat-icon-btn" data-action="open-chat" data-task-id="${t._id}" title="${t._messages.length} messages">${chatSvg}</button>` : '';
+    return `<tr><td style="color:var(--text3);font-weight:600">${t._id}</td><td title="${escHtml(t._title)}">${chatBtn}${escHtml(t._title)}</td><td><span class="status-badge ${si.cls}"><span class="status-dot"></span>${si.short || si.label}</span></td><td>${escHtml(t._catClean)}</td><td>${escHtml(t._floor)}</td><td title="${escHtml(t._assignee)}">${t._assignee ? t._assignee.split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : ''}</td><td style="color:var(--text3)">${formatDate(parseDate(t._created))}</td><td style="color:var(--text3)">${formatDate(parseDate(t._updated))}</td><td>${t._tags.slice(0, 4).map(tag => `<span class="tag-badge">${escHtml(tag)}</span>`).join('')}${t._tags.length > 4 ? '<span class="tag-badge">+' + (t._tags.length - 4) + '</span>' : ''}</td></tr>`;
+  }).join('');
+  // Pagination
+  let ph = '';
+  if (tp.totalPages > 1) {
+    const p = currentPage.peek();
+    ph += `<button ${p === 0 ? 'disabled' : ''} data-action="go-page" data-page="0">First</button><button ${p === 0 ? 'disabled' : ''} data-action="go-page" data-page="${p - 1}">Prev</button>`;
+    const s3 = Math.max(0, p - 2), e3 = Math.min(tp.totalPages, s3 + 5);
+    for (let i = s3; i < e3; i++) ph += `<button class="${i === p ? 'active' : ''}" data-action="go-page" data-page="${i}">${i + 1}</button>`;
+    ph += `<button ${p >= tp.totalPages - 1 ? 'disabled' : ''} data-action="go-page" data-page="${p + 1}">Next</button><button ${p >= tp.totalPages - 1 ? 'disabled' : ''} data-action="go-page" data-page="${tp.totalPages - 1}">Last</button>`;
+  }
+  document.getElementById('pagination').innerHTML = ph;
+}
+
+function renderActiveColFilters() {
+  const c = document.getElementById('active-col-filters'), cf = columnFilters.peek();
+  let html = '';
+  for (const [col, vals] of Object.entries(cf)) {
+    if (!vals || vals.size === 0) continue;
+    const cd = TABLE_COLS.find(c2 => c2.key === col); const l = cd ? cd.label : col;
+    const va = [...vals]; const dv = va.length <= 2 ? va.join(', ') : va.slice(0, 2).join(', ') + ' +' + (va.length - 2);
+    html += `<span class="col-filter-tag" data-action="clear-col-filter" data-col="${col}">${l}: ${dv}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>`;
+  }
+  c.innerHTML = html;
+}
+
+// ─── Chat Modal ───
+// Displays a task's message history in a chat-like modal. Supports filtering
+// by message type (comments, photos, status changes, system). Colors are
+// assigned per-sender using a rotating palette for visual distinction.
+const SENDER_COLORS = ['#6366f1','#0ea5e9','#f59e0b','#ec4899','#10b981','#8b5cf6'];
+const senderColorMap = {}; let nextSC = 0;
+// Assign a consistent color to each unique sender (persists across modal opens)
+function senderColor(name) { if (!senderColorMap[name]) senderColorMap[name] = SENDER_COLORS[nextSC++ % SENDER_COLORS.length]; return senderColorMap[name]; }
+function senderInitials(name) { return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase(); }
+
+function openChatModal(taskId) {
+  const task = rawTasks.peek().find(t => t._id === taskId);
+  if (!task || !task._messages.length) return;
+  document.getElementById('chat-title').textContent = task._title;
+  const si = STATUS_MAP[task._status] || { label: task._status };
+  document.getElementById('chat-sub').innerHTML = `<span class="status-badge ${si.cls || ''}"><span class="status-dot"></span>${si.short || si.label}</span><span>${task._catClean}</span><span>${task._floor}</span>`;
+  chatState.set({ open: true, taskId, filter: 'all' });
+  renderChatFilters(task); renderChatMessages(task);
+  document.getElementById('chat-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // Focus trap
+  const modal = document.querySelector('.chat-modal');
+  const closeBtn = modal.querySelector('.chat-close');
+  if (closeBtn) closeBtn.focus();
+}
+function closeChatModal() {
+  document.getElementById('chat-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  chatState.set({ open: false, taskId: null, filter: 'all' });
+}
+function setChatFilter(f, taskId) {
+  chatState.set({ ...chatState.peek(), filter: f });
+  const task = rawTasks.peek().find(t => t._id === taskId);
+  if (task) { renderChatFilters(task); renderChatMessages(task); }
+}
+function renderChatFilters(task) {
+  const msgs = task._messages, cs = chatState.peek();
+  const counts = { all: msgs.length, comment: 0, photo: 0, status: 0, system: 0 };
+  msgs.forEach(m => { if (m.type === 'comment') counts.comment++; else if (m.type === 'photo') counts.photo++; else if (m.type === 'status') counts.status++; else counts.system++; });
+  const types = [['all','All'],['comment','Comments'],['photo','Photos'],['status','Status'],['system','System']];
+  document.getElementById('chat-filter-bar').innerHTML = types.filter(([k]) => k === 'all' || counts[k] > 0).map(([k, l]) => `<span class="chat-filter-pill${cs.filter === k ? ' active' : ''}" role="button" tabindex="0" data-action="chat-filter" data-filter="${k}" data-task-id="${task._id}">${l} (${counts[k]})</span>`).join('');
+}
+function renderChatMessages(task) {
+  const body = document.getElementById('chat-body'), cs = chatState.peek();
+  let msgs = task._messages;
+  if (cs.filter === 'comment') msgs = msgs.filter(m => m.type === 'comment');
+  else if (cs.filter === 'photo') msgs = msgs.filter(m => m.type === 'photo');
+  else if (cs.filter === 'status') msgs = msgs.filter(m => m.type === 'status');
+  else if (cs.filter === 'system') msgs = msgs.filter(m => m.type === 'system' || m.type === 'tag' || m.type === 'assign' || m.type === 'checklist');
+  let html = '', lastSender = '';
+  msgs.forEach(m => {
+    const isSystem = m.type === 'status' || m.type === 'system' || m.type === 'tag' || m.type === 'assign' || m.type === 'checklist';
+    const color = senderColor(m.sender), initials = senderInitials(m.sender);
+    const showSender = m.sender !== lastSender; lastSender = m.sender;
+    if (isSystem) {
+      html += `<div class="chat-msg system"><div class="chat-bubble">${escHtml(m.sender)}: ${escHtml(m.text)}</div></div>`;
+    } else if (m.type === 'photo') {
+      html += `<div class="chat-msg photo">${showSender ? `<div class="chat-avatar" style="background:${color}">${initials}</div>` : '<div style="width:28px;flex-shrink:0"></div>'}`;
+      html += `<div>${showSender ? `<div class="chat-sender">${escHtml(m.sender)}</div>` : ''}`;
+      html += `<div class="chat-bubble"><a href="${escHtml(m.url)}" target="_blank" rel="noopener"><img src="${escHtml(m.url)}" class="chat-photo-thumb" alt="Photo" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=\\'display:inline-flex;align-items:center;gap:4px;color:var(--green-dark);font-size:.72rem\\'>View Photo</span>')"></a></div></div></div>`;
+    } else {
+      html += `<div class="chat-msg comment">${showSender ? `<div class="chat-avatar" style="background:${color}">${initials}</div>` : '<div style="width:28px;flex-shrink:0"></div>'}`;
+      html += `<div>${showSender ? `<div class="chat-sender">${escHtml(m.sender)}</div>` : ''}`;
+      html += `<div class="chat-bubble">${escHtml(m.text)}</div></div></div>`;
+    }
+  });
+  body.innerHTML = html || '<div style="text-align:center;color:var(--text3);padding:40px;font-size:.82rem">No messages matching filter</div>';
+  document.getElementById('chat-count').textContent = msgs.length + ' message' + (msgs.length !== 1 ? 's' : '');
+  body.scrollTop = 0;
+}
+
+// ─── Floor Plan Viewer ───
+// Displays floor plan images with interactive task pins positioned at X/Y coordinates.
+// Supports mouse wheel zoom, click-drag pan, and touch pinch-zoom/pan on mobile.
+// Keeps imperative state for zoom/pan (not reactive — performance-sensitive pointer events).
+let fpTooltipEl = null, fpZoom = 1, fpPanX = 0, fpPanY = 0, fpDragging = false, fpDragStartX = 0, fpDragStartY = 0, fpPanStartX = 0, fpPanStartY = 0;
+function fpResetZoom() { fpZoom = 1; fpPanX = 0; fpPanY = 0; }
+function fpApplyTransform(container) {
+  const inner = container.querySelector('.floorplan-inner');
+  if (inner) inner.style.transform = `translate(${fpPanX}px,${fpPanY}px) scale(${fpZoom})`;
+  const lvl = container.querySelector('.floorplan-zoom-level');
+  if (lvl) lvl.textContent = Math.round(fpZoom * 100) + '%';
+}
+function fpClampPan(container) {
+  if (fpZoom <= 1) { fpPanX = 0; fpPanY = 0; return; }
+  const cr = container.getBoundingClientRect(), inner = container.querySelector('.floorplan-inner');
+  if (!inner) return;
+  const w = inner.scrollWidth * fpZoom, ht = inner.scrollHeight * fpZoom;
+  fpPanX = Math.min(0, Math.max(-(w - cr.width), fpPanX));
+  fpPanY = Math.min(0, Math.max(Math.min(0, -(ht - cr.height)), fpPanY));
+}
+let fpZoomInitialized = false;
+function fpSetupZoom(container) {
+  fpResetZoom();
+  container.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    const rect = container.getBoundingClientRect(), mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    const oldZoom = fpZoom, delta = e.deltaY > 0 ? -0.15 : 0.15;
+    fpZoom = Math.min(6, Math.max(1, fpZoom + delta * fpZoom));
+    fpPanX = mx - (mx - fpPanX) * (fpZoom / oldZoom);
+    fpPanY = my - (my - fpPanY) * (fpZoom / oldZoom);
+    fpClampPan(container); fpApplyTransform(container);
+  }, { passive: false });
+  container.addEventListener('mousedown', function(e) {
+    if (fpZoom <= 1 || e.button !== 0) return;
+    fpDragging = true; fpDragStartX = e.clientX; fpDragStartY = e.clientY; fpPanStartX = fpPanX; fpPanStartY = fpPanY;
+    container.classList.add('grabbing'); e.preventDefault();
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (!fpDragging) return;
+    fpPanX = fpPanStartX + (e.clientX - fpDragStartX); fpPanY = fpPanStartY + (e.clientY - fpDragStartY);
+    fpClampPan(container); fpApplyTransform(container);
+  });
+  document.addEventListener('mouseup', function() { if (fpDragging) { fpDragging = false; container.classList.remove('grabbing'); } });
+  // Touch pinch-zoom + pan
+  let fpTouchDist = 0, fpTouchZoomStart = 1, fpTouches = null;
+  container.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 2) { e.preventDefault(); const dx = e.touches[0].clientX - e.touches[1].clientX, dy = e.touches[0].clientY - e.touches[1].clientY; fpTouchDist = Math.hypot(dx, dy); fpTouchZoomStart = fpZoom; }
+    else if (e.touches.length === 1 && fpZoom > 1) { fpDragStartX = e.touches[0].clientX; fpDragStartY = e.touches[0].clientY; fpPanStartX = fpPanX; fpPanStartY = fpPanY; fpTouches = 'pan'; }
+  }, { passive: false });
+  container.addEventListener('touchmove', function(e) {
+    if (e.touches.length === 2) { e.preventDefault(); const dx = e.touches[0].clientX - e.touches[1].clientX, dy = e.touches[0].clientY - e.touches[1].clientY; fpZoom = Math.min(6, Math.max(1, fpTouchZoomStart * (Math.hypot(dx, dy) / fpTouchDist))); fpClampPan(container); fpApplyTransform(container); }
+    else if (fpTouches === 'pan' && e.touches.length === 1) { e.preventDefault(); fpPanX = fpPanStartX + (e.touches[0].clientX - fpDragStartX); fpPanY = fpPanStartY + (e.touches[0].clientY - fpDragStartY); fpClampPan(container); fpApplyTransform(container); }
+  }, { passive: false });
+  container.addEventListener('touchend', function() { fpTouches = null; });
+}
+
+function renderFloorPlan() {
+  const toolbar = document.getElementById('floorplan-toolbar');
+  const container = document.getElementById('floorplan-container');
+  const tasks = filteredTasks.peek();
+  const plansWithTasks = new Set(tasks.filter(t => t._plan).map(t => t._plan));
+  const planKeys = Object.keys(planMap).filter(p => plansWithTasks.has(p)).sort((a, b) => {
+    const all = rawTasks.peek();
+    const fa = all.find(t => t._plan === a), fb = all.find(t => t._plan === b);
+    return floorSortKey(fa ? fa._floor : '') - floorSortKey(fb ? fb._floor : '');
+  });
+  let sp = selectedPlan.peek();
+  if (!sp || !plansWithTasks.has(sp)) { sp = planKeys[0] || null; selectedPlan.set(sp); }
+  let th = '<div class="floorplan-tags">';
+  if (!planKeys.length) th += '<span style="color:var(--text3);font-size:.78rem">No plans available</span>';
+  else planKeys.forEach(p => { const cnt = tasks.filter(t => t._plan === p).length; th += `<button class="floorplan-tag${sp === p ? ' active' : ''}" data-action="select-plan" data-value="${escHtml(p)}">${escHtml(p)} (${cnt})</button>`; });
+  th += '</div><div class="floorplan-legend"><span><span class="swatch" style="background:var(--green-dark)"></span>Completed</span><span><span class="swatch" style="background:var(--amber-dark)"></span>In Progress</span><span><span class="swatch" style="background:var(--red-dark)"></span>Open</span></div>';
+  toolbar.innerHTML = th;
+  if (!sp) { container.innerHTML = '<div class="floorplan-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg><span>No plans match current filters</span></div>'; return; }
+  const planUrl = planMap[sp] ? planMap[sp].url : '';
+  if (!planUrl) { showFloorPlanPins(container); return; }
+  fpResetZoom();
+  container.innerHTML = '<div class="floorplan-loading">Loading plan image\u2026</div>';
+  const img = new Image();
+  img.onload = function() {
+    container.innerHTML = '';
+    const inner = document.createElement('div'); inner.className = 'floorplan-inner'; inner.appendChild(img);
+    const overlay = document.createElement('div'); overlay.className = 'floorplan-pins'; inner.appendChild(overlay);
+    container.appendChild(inner);
+    const zc = document.createElement('div'); zc.className = 'floorplan-zoom-controls';
+    zc.innerHTML = '<button data-action="fp-zoom-in" title="Zoom in">+</button><div class="floorplan-zoom-level">100%</div><button data-action="fp-zoom-out" title="Zoom out">&minus;</button><button data-action="fp-zoom-reset" title="Reset zoom" style="font-size:.7rem">&#8634;</button>';
+    container.appendChild(zc);
+    if (!fpZoomInitialized) { fpSetupZoom(container); fpZoomInitialized = true; }
+    showFloorPlanPins(container);
+  };
+  img.onerror = function() { showFloorPlanPins(container); };
+  img.src = planUrl; img.style.cssText = 'width:100%;display:block';
+}
+function showFloorPlanPins(container) {
+  let overlay = container.querySelector('.floorplan-pins');
+  if (!overlay) {
+    container.innerHTML = '<div style="position:relative;min-height:400px;background:var(--surface2);display:flex;align-items:center;justify-content:center"><span style="color:var(--text3);font-size:.82rem;position:absolute;z-index:0">Plan image unavailable \u2014 showing pin positions</span><div class="floorplan-pins" style="min-height:400px;width:100%"></div></div>';
+    overlay = container.querySelector('.floorplan-pins');
+  }
+  overlay.querySelectorAll('.floorplan-pin').forEach(p => p.remove());
+  const sp = selectedPlan.peek();
+  const tasks = filteredTasks.peek().filter(t => t._plan === sp && (t._xPos || t._yPos));
+  tasks.forEach(t => {
+    const pin = document.createElement('div');
+    pin.className = 'floorplan-pin' + (t._messages.length ? ' has-chat' : '');
+    pin.style.left = t._xPos + '%'; pin.style.top = t._yPos + '%';
+    pin.style.background = statusColorDark(t._status || 'open');
+    pin.addEventListener('mouseenter', e => showPinTooltip(e, t, container));
+    pin.addEventListener('mouseleave', hidePinTooltip);
+    if (t._messages.length) { pin.setAttribute('data-action', 'open-chat'); pin.setAttribute('data-task-id', t._id); }
+    overlay.appendChild(pin);
+  });
+}
+function showPinTooltip(e, task, container) {
+  hidePinTooltip();
+  const si = STATUS_MAP[task._status] || { cls: '', short: task._status };
+  const tt = document.createElement('div'); tt.className = 'floorplan-tooltip';
+  tt.innerHTML = `<div class="fp-tt-id">#${task._id}</div><div class="fp-tt-title">${escHtml(task._title)}</div><div class="fp-tt-meta"><span class="status-badge ${si.cls}"><span class="status-dot"></span>${si.short || si.label}</span><span class="tag-badge">${escHtml(task._catClean)}</span></div>${task._tags.length ? '<div style="margin-top:4px">' + task._tags.slice(0, 3).map(tag => '<span class="tag-badge">' + escHtml(tag) + '</span>').join('') + '</div>' : ''}${task._messages.length ? '<div style="margin-top:4px;color:var(--accent);font-size:.68rem">' + task._messages.length + ' message' + (task._messages.length > 1 ? 's' : '') + ' \u2014 click to view</div>' : ''}`;
+  container.appendChild(tt);
+  fpTooltipEl = tt;
+  const pin = e.target, cr = container.getBoundingClientRect(), pr = pin.getBoundingClientRect();
+  let left = pr.left - cr.left + pr.width / 2 + 10, top = pr.top - cr.top - 10;
+  if (left + 260 > cr.width) left = pr.left - cr.left - 270;
+  if (top < 0) top = pr.top - cr.top + pr.height + 10;
+  tt.style.left = Math.max(4, left) + 'px'; tt.style.top = Math.max(4, top) + 'px';
+}
+function hidePinTooltip() { if (fpTooltipEl) { fpTooltipEl.remove(); fpTooltipEl = null; } }
+
+// ─── Column Filter Helpers ───
+// Manages per-column filter dropdowns in the table header. Each dropdown shows
+// unique values with checkboxes, a search input, and select all/clear buttons.
+
+// getUniqueColValues() — collect all unique values for a column across ALL tasks (unfiltered).
+// Returns sorted array with column-appropriate ordering (floors by sort key, statuses by classification, etc.)
+function getUniqueColValues(col) {
+  const all = rawTasks.peek(), v = new Set();
+  all.forEach(t => { const val = getColFilterValue(t, col); if (Array.isArray(val)) val.forEach(x => v.add(x)); else v.add(val); });
+  const a = [...v].filter(Boolean);
+  if (col === '_floor') return a.sort((a2, b) => floorSortKey(a2) - floorSortKey(b));
+  if (col === '_id') return a.sort((a2, b) => parseInt(a2) - parseInt(b));
+  if (col === '_status') return a.sort((a2, b) => STATUS_ORDER.indexOf(a2) - STATUS_ORDER.indexOf(b));
+  return a.sort((a2, b) => a2.localeCompare(b));
+}
+function closeAllColumnFilters() {
+  document.querySelectorAll('.col-filter-dropdown').forEach(dd => dd.classList.remove('open'));
+  document.getElementById('col-filter-overlay').classList.remove('open');
+  openColFilter = null;
+}
+function toggleColumnFilter(col) {
+  const dd = document.getElementById('cfd-' + col), ov = document.getElementById('col-filter-overlay');
+  if (openColFilter === col) { closeAllColumnFilters(); return; }
+  closeAllColumnFilters(); openColFilter = col;
+  const uv = getUniqueColValues(col), cf = columnFilters.peek()[col] || new Set();
+  let html = `<input type="text" class="col-filter-search" placeholder="Search..." data-action="col-filter-search" data-col="${col}"><div class="col-filter-actions"><button data-action="col-toggle-all" data-col="${col}" data-state="true">Select All</button><button data-action="col-toggle-all" data-col="${col}" data-state="false">Clear All</button></div><div class="col-filter-list" id="cfl-${col}">`;
+  uv.forEach(v => { const ch = cf.size === 0 || cf.has(v) ? 'checked' : ''; html += `<label class="col-filter-option" data-val="${v.toLowerCase()}"><input type="checkbox" value="${escHtml(v)}" ${ch}><span>${escHtml(v)}</span></label>`; });
+  html += `</div><button class="col-filter-apply" data-action="apply-col-filter" data-col="${col}">Apply Filter</button>`;
+  dd.innerHTML = html; dd.classList.add('open'); ov.classList.add('open');
+  dd.querySelector('.col-filter-search').focus();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 14. Event Delegation — 3 roots
+//
+// All user interactions are handled via event delegation instead of inline onclick.
+// Three delegation roots: #dashboard (main content), .header, #chat-overlay.
+// Pattern: elements have data-action="action-name" + data-value="..." attributes.
+// findAction() bubbles up from click target to find the nearest data-action element.
+// ═══════════════════════════════════════════════════════════════
+
+// findAction() — walk up from event target to find nearest ancestor with data-action.
+// Returns { el, action } or null if no action found before reaching the delegation root.
+function findAction(e) {
+  let el = e.target;
+  while (el && el !== e.currentTarget) {
+    if (el.dataset && el.dataset.action) return { el, action: el.dataset.action };
+    el = el.parentElement;
+  }
+  return null;
+}
+
+// Dashboard click delegation — handles all filter, sort, page, expand, plan, chat, and zoom actions
+document.getElementById('dashboard').addEventListener('click', function(e) {
+  const hit = findAction(e);
+  if (!hit) return;
+  const { el, action } = hit;
+  const val = el.dataset.value;
+  switch (action) {
+    case 'filter-status': { const f = filters.peek(); filters.set({ ...f, status: f.status === val ? null : val }); break; }
+    case 'filter-category': { const f = filters.peek(); filters.set({ ...f, category: f.category === val ? null : val }); break; }
+    case 'filter-floor': { const f = filters.peek(); filters.set({ ...f, floor: f.floor === val ? null : val }); break; }
+    case 'filter-tag': { const f = filters.peek(); filters.set({ ...f, tag: f.tag === val ? null : val }); break; }
+    case 'clear-tag': { const f = filters.peek(); filters.set({ ...f, tag: null }); break; }
+    case 'filter-floor-select': break; // handled by change listener
+    case 'toggle-floor': {
+      const exp = new Set(expandedFloors.peek());
+      if (exp.has(val)) exp.delete(val); else exp.add(val);
+      expandedFloors.set(exp);
+      break;
+    }
+    case 'open-chat': { e.stopPropagation(); openChatModal(parseInt(el.dataset.taskId)); break; }
+    case 'select-plan': { selectedPlan.set(val); renderFloorPlan(); break; }
+    case 'fp-zoom-in': { fpZoom = Math.min(6, fpZoom + 0.3); const c = el.closest('.floorplan-container'); fpClampPan(c); fpApplyTransform(c); break; }
+    case 'fp-zoom-out': { fpZoom = Math.max(1, fpZoom - 0.3); const c = el.closest('.floorplan-container'); fpClampPan(c); fpApplyTransform(c); break; }
+    case 'fp-zoom-reset': { fpResetZoom(); fpApplyTransform(el.closest('.floorplan-container')); break; }
+    case 'sort-table': { const ss = sortState.peek(); const col = el.dataset.col; sortState.set({ col, dir: ss.col === col ? ss.dir * -1 : 1 }); break; }
+    case 'toggle-col-filter': { e.stopPropagation(); toggleColumnFilter(el.dataset.col); break; }
+    case 'apply-col-filter': {
+      const col = el.dataset.col, list = document.getElementById('cfl-' + col);
+      const checks = list.querySelectorAll('input[type="checkbox"]'), total = checks.length;
+      const checked = [...checks].filter(cb => cb.checked);
+      const cf = { ...columnFilters.peek() };
+      if (checked.length === 0 || checked.length === total) delete cf[col];
+      else cf[col] = new Set(checked.map(cb => cb.value));
+      columnFilters.set(cf);
+      closeAllColumnFilters();
+      break;
+    }
+    case 'clear-col-filter': { const cf = { ...columnFilters.peek() }; delete cf[el.dataset.col]; columnFilters.set(cf); break; }
+    case 'col-toggle-all': {
+      const col = el.dataset.col, state = el.dataset.state === 'true';
+      document.getElementById('cfl-' + col).querySelectorAll('input[type="checkbox"]').forEach(cb => { if (cb.closest('.col-filter-option').style.display !== 'none') cb.checked = state; });
+      break;
+    }
+    case 'col-filter-search': break; // handled by input event
+    case 'go-page': { currentPage.set(Math.max(0, parseInt(el.dataset.page))); document.getElementById('task-table').scrollIntoView({ behavior: 'smooth', block: 'start' }); break; }
+    case 'col-resize': break; // handled by mousedown
+  }
+});
+
+// Dashboard change event — handles the floor <select> dropdown
+document.getElementById('dashboard').addEventListener('change', function(e) {
+  if (e.target.dataset.action === 'filter-floor-select') {
+    const f = filters.peek();
+    filters.set({ ...f, floor: e.target.value || null });
+  }
+});
+
+// Dashboard input event — handles global search bar and column filter search inputs
+document.getElementById('dashboard').addEventListener('input', function(e) {
+  if (e.target.id === 'global-search') {
+    const f = filters.peek();
+    filters.set({ ...f, search: e.target.value });
+  }
+  if (e.target.dataset.action === 'col-filter-search') {
+    const q = e.target.value.toLowerCase(), col = e.target.dataset.col;
+    document.getElementById('cfl-' + col).querySelectorAll('.col-filter-option').forEach(opt => {
+      opt.style.display = opt.dataset.val.includes(q) ? '' : 'none';
+    });
+  }
+});
+
+// Keyboard accessibility — Enter/Space activates pills/legend items; arrow keys navigate pagination
+document.getElementById('dashboard').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' || e.key === ' ') {
+    const hit = findAction(e);
+    if (hit && (hit.el.classList.contains('pill') || hit.el.classList.contains('tag-item') || hit.el.classList.contains('legend-item') || hit.el.classList.contains('chat-filter-pill'))) {
+      e.preventDefault();
+      hit.el.click();
+    }
+  }
+  // Arrow keys for pagination
+  if (e.target.closest('.pagination')) {
+    if (e.key === 'ArrowLeft') { const prev = e.target.previousElementSibling; if (prev) prev.focus(); }
+    if (e.key === 'ArrowRight') { const next = e.target.nextElementSibling; if (next) next.focus(); }
+  }
+});
+
+// Header delegation — theme toggle, CSV load button, reset filters
+document.querySelector('.header').addEventListener('click', function(e) {
+  const hit = findAction(e);
+  if (!hit) return;
+  switch (hit.action) {
+    case 'toggle-theme': {
+      const n = (document.documentElement.getAttribute('data-theme') || 'dark') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', n);
+      localStorage.setItem('fw-theme', n);
+      // Rerender charts that depend on CSS vars
+      if (rawTasks.peek().length > 0) { renderDonut(); renderTimeline(); }
+      break;
+    }
+    case 'load-csv': document.getElementById('file-input').click(); break;
+    case 'reset': {
+      // Clear all state and return to CSV upload screen
+      batch(() => {
+        rawTasks.set([]);
+        filters.set({ status: null, category: null, floor: null, tag: null, search: '' });
+        columnFilters.set({});
+        sortState.set({ col: null, dir: 1 });
+        currentPage.set(0);
+        selectedPlan.set(null);
+        expandedFloors.set(new Set());
+        chatState.set({ open: false, taskId: null, filter: 'all' });
+      });
+      STATUS_MAP = {}; STATUS_ORDER = []; planMap = {};
+      const s = document.getElementById('global-search'); if (s) s.value = '';
+      document.getElementById('file-name').textContent = '';
+      document.getElementById('project-name').textContent = 'Project Dashboard';
+      document.getElementById('header-logo').textContent = 'P';
+      document.title = 'Project Dashboard';
+      // Hide dashboard, show drop zone
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('drop-zone').style.display = '';
+      document.getElementById('reset-btn').style.display = 'none';
+      // Clear saved CSV from IndexedDB
+      clearCSVStorage();
+      // Clear URL params
+      if (location.search) history.replaceState(null, '', location.pathname);
+      break;
+    }
+  }
+});
+
+// Chat overlay delegation — close on backdrop click, filter pills, close button
+document.getElementById('chat-overlay').addEventListener('click', function(e) {
+  if (e.target === this) { closeChatModal(); return; }
+  const hit = findAction(e);
+  if (!hit) return;
+  switch (hit.action) {
+    case 'close-chat': closeChatModal(); break;
+    case 'chat-filter': setChatFilter(hit.el.dataset.filter, parseInt(hit.el.dataset.taskId)); break;
+  }
+});
+
+// CSV error dismiss — lives outside delegation roots, so use document-level listener
+document.addEventListener('click', function(e) {
+  const hit = findAction(e);
+  if (hit && hit.action === 'dismiss-csv-error') { const err = document.getElementById('csv-error'); if (err) err.remove(); }
+});
+
+// Column filter overlay — clicking the semi-transparent backdrop closes all dropdowns
+document.getElementById('col-filter-overlay').addEventListener('click', closeAllColumnFilters);
+
+// Column resize — drag table header borders to resize columns.
+// Uses mousedown/mousemove/mouseup cycle with body cursor override.
+document.getElementById('dashboard').addEventListener('mousedown', function(e) {
+  if (e.target.dataset.action === 'col-resize') {
+    e.stopPropagation(); e.preventDefault();
+    const th = e.target.parentElement;
+    const startX = e.clientX, startW = th.offsetWidth;
+    function doResize(ev) { th.style.width = Math.max(40, startW + (ev.clientX - startX)) + 'px'; }
+    function stopResize() { document.removeEventListener('mousemove', doResize); document.removeEventListener('mouseup', stopResize); document.body.style.cursor = ''; document.body.style.userSelect = ''; }
+    document.addEventListener('mousemove', doResize);
+    document.addEventListener('mouseup', stopResize);
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  }
+});
+
+// Global Escape key — closes chat modal or column filter dropdowns
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    if (document.getElementById('chat-overlay').classList.contains('open')) closeChatModal();
+    else closeAllColumnFilters();
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// 15. File Handling, Web Worker, Init & Effects Wiring
+//
+// Handles CSV file loading (drag-drop + file input), parses via Web Worker
+// for non-blocking UI, and wires all signals → effects → view functions.
+// ═══════════════════════════════════════════════════════════════
+
+// Theme init — restore saved theme preference from localStorage on page load
+(function() { const s = localStorage.getItem('fw-theme'); if (s) document.documentElement.setAttribute('data-theme', s); })();
+
+// ─── IndexedDB Persistence ───
+// Saves the CSV ArrayBuffer to IndexedDB so it persists across page refreshes.
+// IndexedDB is used instead of localStorage because CSV files can exceed the 5MB localStorage limit.
+const DB_NAME = 'fw-dashboard', DB_STORE = 'csv-data', DB_VERSION = 1;
+
+// openDB() — opens (or creates) the IndexedDB database
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => { req.result.createObjectStore(DB_STORE); };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+// saveCSVToStorage() — persist the raw CSV ArrayBuffer + filename to IndexedDB
+async function saveCSVToStorage(buffer, fileName) {
+  try {
+    const db = await openDB();
+    const tx = db.transaction(DB_STORE, 'readwrite');
+    tx.objectStore(DB_STORE).put({ buffer, fileName, savedAt: Date.now() }, 'latest');
+    return new Promise((resolve, reject) => { tx.oncomplete = resolve; tx.onerror = () => reject(tx.error); });
+  } catch (e) { /* silently fail — persistence is nice-to-have, not critical */ }
+}
+
+// loadCSVFromStorage() — retrieve the saved CSV data, or null if none exists
+async function loadCSVFromStorage() {
+  try {
+    const db = await openDB();
+    const tx = db.transaction(DB_STORE, 'readonly');
+    const req = tx.objectStore(DB_STORE).get('latest');
+    return new Promise((resolve) => { req.onsuccess = () => resolve(req.result || null); req.onerror = () => resolve(null); });
+  } catch (e) { return null; }
+}
+
+// clearCSVStorage() — remove saved CSV data (e.g., when user clicks "clear data")
+async function clearCSVStorage() {
+  try {
+    const db = await openDB();
+    const tx = db.transaction(DB_STORE, 'readwrite');
+    tx.objectStore(DB_STORE).delete('latest');
+  } catch (e) { /* ignore */ }
+}
+
+// parseCSVWorker() — parses CSV in a Web Worker to keep UI responsive during large file loads.
+// Creates an inline Worker via Blob URL containing the parser function source code.
+// Falls back to synchronous main-thread parse if Worker creation fails (e.g., CSP restrictions).
+function parseCSVWorker(buffer) {
+  return new Promise((resolve, reject) => {
+    try {
+      const workerCode = `
+        self.onmessage = function(e) {
+          try {
+            ${parseTabLine.toString()}
+            ${parseDate.toString()}
+            ${parseMessage.toString()}
+            ${extractPlanLink.toString()}
+            ${parseCSVData.toString()}
+            const result = parseCSVData(e.data);
+            self.postMessage({ ok: true, result });
+          } catch (err) {
+            self.postMessage({ ok: false, error: err.message });
+          }
+        };
+      `;
+      const blob = new Blob([workerCode], { type: 'application/javascript' });
+      const url = URL.createObjectURL(blob);
+      const worker = new Worker(url);
+      worker.onmessage = function(e) {
+        URL.revokeObjectURL(url);
+        worker.terminate();
+        if (e.data.ok) resolve(e.data.result);
+        else reject(new Error(e.data.error));
+      };
+      worker.onerror = function(err) {
+        URL.revokeObjectURL(url);
+        worker.terminate();
+        // Fallback to sync
+        resolve(parseCSVData(buffer));
+      };
+      worker.postMessage(buffer, [buffer.slice(0)]);
+    } catch (e) {
+      // Worker creation failed (CSP), fallback to sync
+      resolve(parseCSVData(buffer));
+    }
+  });
+}
+
+// Drop zone — supports drag-and-drop + click-to-browse file loading
+const dropZone = document.getElementById('drop-zone'), fileInput = document.getElementById('file-input');
+// _dragCounter tracks enter/leave across child elements to prevent flicker
+let _dragCounter = 0;
+dropZone.addEventListener('dragenter', e => { e.preventDefault(); _dragCounter++; dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
+dropZone.addEventListener('dragleave', e => { e.preventDefault(); _dragCounter--; if (_dragCounter <= 0) { _dragCounter = 0; dropZone.classList.remove('dragover'); } });
+dropZone.addEventListener('drop', e => { e.preventDefault(); e.stopPropagation(); _dragCounter = 0; dropZone.classList.remove('dragover'); if (e.dataTransfer.files.length) loadFile(e.dataTransfer.files[0]); });
+dropZone.addEventListener('click', () => { fileInput.click(); });
+// Prevent browser default drop behavior on the whole page (opening the file)
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => e.preventDefault());
+fileInput.addEventListener('change', () => { if (fileInput.files.length) loadFile(fileInput.files[0]); });
+
+function showLoading() {
+  const overlay = document.createElement('div'); overlay.className = 'loading-overlay'; overlay.id = 'loading-overlay';
+  overlay.innerHTML = '<div class="loading-spinner">Parsing CSV\u2026</div>';
+  document.body.appendChild(overlay);
+}
+function hideLoading() { const el = document.getElementById('loading-overlay'); if (el) el.remove(); }
+
+// showCSVError() — displays a styled inline error message when the CSV is invalid.
+// Handles schema errors (missing columns) with a detailed breakdown, or generic errors.
+function showCSVError(message, fileName) {
+  // Remove any previous error
+  const prev = document.getElementById('csv-error'); if (prev) prev.remove();
+
+  let html = '';
+  if (message.startsWith('CSV_SCHEMA_ERROR:')) {
+    // Structured schema error — parse the JSON payload
+    const info = JSON.parse(message.slice('CSV_SCHEMA_ERROR:'.length));
+    html = `
+      <div class="csv-error-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+      <div class="csv-error-title">Invalid CSV Schema</div>
+      <div class="csv-error-subtitle">"${escHtml(fileName)}" is missing required columns for the dashboard.</div>
+      <div class="csv-error-detail">
+        <div class="csv-error-section">
+          <div class="csv-error-label">Missing Required Columns:</div>
+          <div class="csv-error-chips">${info.missing.map(c => '<span class="csv-chip csv-chip-missing">' + escHtml(c) + '</span>').join('')}</div>
+        </div>
+        ${info.recommended.length ? `<div class="csv-error-section">
+          <div class="csv-error-label">Also Missing (Recommended):</div>
+          <div class="csv-error-chips">${info.recommended.map(c => '<span class="csv-chip csv-chip-warn">' + escHtml(c) + '</span>').join('')}</div>
+        </div>` : ''}
+        <div class="csv-error-section">
+          <div class="csv-error-label">Required Schema:</div>
+          <div class="csv-error-chips">${info.required.map(c => '<span class="csv-chip csv-chip-req">' + escHtml(c) + '</span>').join('')}</div>
+        </div>
+        <div class="csv-error-section">
+          <div class="csv-error-label">Columns Found in Your File:</div>
+          <div class="csv-error-chips">${info.found.map(c => '<span class="csv-chip">' + escHtml(c) + '</span>').join('')}${info.found.length >= 15 ? '<span class="csv-chip" style="opacity:.5">...</span>' : ''}</div>
+        </div>
+      </div>
+      <div class="csv-error-hint">This dashboard requires a <strong>Fieldwire CSV export</strong> with tab-separated columns. Export from Fieldwire &rarr; Project &rarr; Tasks &rarr; Export CSV.</div>
+    `;
+  } else {
+    // Generic error
+    html = `
+      <div class="csv-error-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+      <div class="csv-error-title">Could Not Load CSV</div>
+      <div class="csv-error-subtitle">${escHtml(message)}</div>
+      <div class="csv-error-hint">Make sure you are uploading a <strong>Fieldwire CSV export</strong> file (.csv).</div>
+    `;
+  }
+  html += '<button class="btn btn-primary csv-error-dismiss" data-action="dismiss-csv-error">Try Another File</button>';
+
+  const el = document.createElement('div');
+  el.id = 'csv-error';
+  el.className = 'csv-error';
+  el.innerHTML = html;
+  dropZone.parentElement.insertBefore(el, dropZone.nextSibling);
+}
+
+// loadFile() — main entry point for CSV loading. Reads file as ArrayBuffer,
+// parses via Worker (with sync fallback), builds status config, extracts
+// project name, populates planMap, then batch-sets all signals which triggers
+// all effects to render the dashboard. Restores URL state if present.
+async function loadFile(file) {
+  // Clear any previous CSV error before attempting load
+  const prevErr = document.getElementById('csv-error'); if (prevErr) prevErr.remove();
+  document.getElementById('file-name').textContent = file.name;
+  showLoading();
+  try {
+    const buffer = await file.arrayBuffer();
+    let result;
+    try { result = await parseCSVWorker(buffer); }
+    catch (e) { result = parseCSVData(buffer); } // sync fallback
+    // Save to IndexedDB for persistence across refreshes
+    saveCSVToStorage(buffer.slice(0), file.name);
+    if (!result.tasks.length) throw new Error('No tasks found');
+    buildStatusConfig(result.tasks); // discover and classify all unique statuses
+    if (result.projectName) {
+      const pn = result.projectName.replace(/\b\w/g, c => c.toUpperCase());
+      document.getElementById('project-name').textContent = pn;
+      document.title = pn + ' \u2014 Task Analytics';
+      document.getElementById('header-logo').textContent = pn.charAt(0).toUpperCase();
+    }
+    planMap = {};
+    result.tasks.forEach(t => { if (t._plan && !planMap[t._plan]) planMap[t._plan] = { url: t._planLink || '' }; });
+    dropZone.style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    document.getElementById('reset-btn').style.display = '';
+    // Restore URL state if present
+    const urlState = urlToFilters();
+    const hasUrlState = urlState.filters.status || urlState.filters.category || urlState.filters.floor || urlState.filters.tag || urlState.filters.search || urlState.sort.col;
+    batch(() => {
+      rawTasks.set(result.tasks);
+      if (hasUrlState) {
+        filters.set(urlState.filters);
+        sortState.set(urlState.sort);
+        currentPage.set(urlState.page);
+      } else {
+        filters.set({ status: null, category: null, floor: null, tag: null, search: '' });
+        columnFilters.set({});
+        sortState.set({ col: null, dir: 1 });
+        currentPage.set(0);
+      }
+      expandedFloors.set(new Set());
+    });
+  } catch (e) {
+    showCSVError(e.message, file.name);
+  } finally {
+    hideLoading();
+  }
+}
+
+// ─── Effects wiring: only affected views re-render on state change ───
+// Each effect reads specific signals/computeds, auto-subscribing to them.
+// When any dependency changes, only that effect re-runs (not all views).
+// This replaces the old renderAll() approach with surgical DOM updates.
+effect(() => { filteredTasks.get(); renderKPIs(); });                     // KPIs depend on filtered task count
+effect(() => { filters.get(); renderFilterBar(); });                      // Filter bar shows active filter state
+effect(() => { statusCounts.get(); renderDonut(); });                     // Donut reads status breakdown
+effect(() => { categoryAgg.get(); renderCategorySection(); });            // Category bars from category aggregation
+effect(() => { floorAgg.get(); expandedFloors.get(); renderFloorHeatmap(); }); // Heatmap: floor data + expand state
+effect(() => { filteredTasks.get(); renderFloorPlan(); });                 // Floor plan pins from filtered tasks
+effect(() => { timelineData.get(); renderTimeline(); });                  // Timeline from cumulative date data
+effect(() => { assigneeAgg.get(); renderAssignees(); });                  // Assignee rows from assignee aggregation
+effect(() => { tagCounts.get(); filters.get(); renderTagCloud(); });      // Tag cloud: counts + active tag highlight
+effect(() => { tablePage.get(); sortState.get(); renderTable(); });       // Table: paginated data + sort indicators
+
+// URL sync effect — updates query string whenever filter/sort/page state changes
+effect(() => {
+  filters.get(); sortState.get(); currentPage.get();
+  if (rawTasks.peek().length > 0) syncURLFromState(); // only sync after data is loaded
+});
+
+// Resize handler — debounced timeline re-render (SVG viewBox depends on container width)
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => { if (rawTasks.peek().length > 0) renderTimeline(); }, 200);
+});
+
+// ─── Auto-restore saved CSV on page load ───
+// If a CSV was previously loaded and saved to IndexedDB, restore it automatically.
+(async function autoRestore() {
+  const saved = await loadCSVFromStorage();
+  if (!saved || !saved.buffer) return;
+  try {
+    const result = parseCSVData(saved.buffer);
+    if (!result.tasks.length) return;
+    document.getElementById('file-name').textContent = saved.fileName || 'Restored from cache';
+    buildStatusConfig(result.tasks);
+    if (result.projectName) {
+      const pn = result.projectName.replace(/\b\w/g, c => c.toUpperCase());
+      document.getElementById('project-name').textContent = pn;
+      document.title = pn + ' \u2014 Task Analytics';
+      document.getElementById('header-logo').textContent = pn.charAt(0).toUpperCase();
+    }
+    planMap = {};
+    result.tasks.forEach(t => { if (t._plan && !planMap[t._plan]) planMap[t._plan] = { url: t._planLink || '' }; });
+    dropZone.style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    document.getElementById('reset-btn').style.display = '';
+    const urlState = urlToFilters();
+    const hasUrlState = urlState.filters.status || urlState.filters.category || urlState.filters.floor || urlState.filters.tag || urlState.filters.search || urlState.sort.col;
+    batch(() => {
+      rawTasks.set(result.tasks);
+      if (hasUrlState) {
+        filters.set(urlState.filters);
+        sortState.set(urlState.sort);
+        currentPage.set(urlState.page);
+      } else {
+        filters.set({ status: null, category: null, floor: null, tag: null, search: '' });
+        columnFilters.set({});
+        sortState.set({ col: null, dir: 1 });
+        currentPage.set(0);
+      }
+      expandedFloors.set(new Set());
+    });
+  } catch (e) { /* silently fail — user can re-upload */ }
+})();
+</script>
+</body>
+</html>
