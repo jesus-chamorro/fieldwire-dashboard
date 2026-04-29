@@ -2,12 +2,14 @@ name: Daily Dashboard Update
 
 on:
   schedule:
-    - cron: "0 10 * * *"  # 6am EST = 10am UTC
-  workflow_dispatch:        # Manual run button
+    - cron: "0 10 * * *"
+  workflow_dispatch:
 
 jobs:
   update-dashboard:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
