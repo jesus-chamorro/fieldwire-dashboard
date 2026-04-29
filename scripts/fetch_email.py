@@ -51,7 +51,7 @@ def fetch_emails(gmail_address, gmail_app_password, data_dir):
         raise SystemExit(1)
 
     try:
-        mail.select("INBOX")
+        mail.select("Fieldwire")
         status, message_ids = mail.search(
             None, '(UNSEEN FROM "support@fieldwire.com" SUBJECT "report")'
         )
