@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Njpac — Younitech Dashboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #111318; color: #d8dae5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; min-height: 100vh; }
+  .header { background: #1a1d27; padding: 20px 32px; border-bottom: 1px solid #2a2d3a; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .header h1 { color: #818cf8; font-size: 22px; }
+  .header a { color: #818cf8; text-decoration: none; font-size: 14px; }
+  .header a:hover { text-decoration: underline; }
+  .content { max-width: 1100px; margin: 0 auto; padding: 24px 32px; }
+  .section { background: #1a1d27; border-radius: 12px; padding: 24px; border: 1px solid #2a2d3a; margin-bottom: 24px; }
+  .section h2 { color: #818cf8; font-size: 17px; margin-bottom: 16px; }
+  .muted { color: #6b7280; font-size: 14px; }
+  .activity-feed { display: flex; flex-direction: column; gap: 8px; }
+  .activity-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: #111318; border-radius: 8px; flex-wrap: wrap; }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .activity-name { font-weight: 600; flex: 1; min-width: 150px; }
+  .activity-badge { padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+  .activity-meta { color: #6b7280; font-size: 13px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #2a2d3a; font-size: 14px; white-space: nowrap; }
+  th { color: #9ca3af; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .bar-wrap { width: 140px; height: 8px; background: #2a2d3a; border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; background: #818cf8; border-radius: 4px; transition: width 0.3s; }
+  .badge { padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+  .badge-red { background: #7f1d1d; color: #fca5a5; }
+  .blocked-panel { background: #2a1215; border: 1px solid #7f1d1d; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .blocked-item { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .blocked-item strong { color: #fca5a5; }
+  .blocked-item span { color: #9ca3af; font-size: 13px; }
+  .cat-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+  .cat-row { display: flex; justify-content: space-between; padding: 8px 14px; background: #111318; border-radius: 6px; font-size: 14px; }
+  .iframe-wrap { margin-top: 24px; border-radius: 12px; overflow: hidden; border: 1px solid #2a2d3a; }
+  .iframe-wrap iframe { width: 100%; height: 800px; border: none; }
+  .footer { text-align: center; padding: 24px; color: #4b5563; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <a href="index.html">&larr; Back to Projects</a>
+    <h1>Njpac</h1>
+  </div>
+  <span style="color:#6b7280;font-size:13px">Updated: Apr 29, 2026 01:56 PM EST</span>
+</div>
+<div class="content">
+  
+        <section class="section">
+          <h2>Today's Activity</h2>
+          <p class="muted">No activity recorded today.</p>
+        </section>
+  
+    <section class="section">
+      <h2>Floor Progress</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Floor</th><th>Progress</th><th>Tasks</th><th>%</th><th>Last Activity</th><th></th></tr></thead>
+          <tbody>
+        <tr>
+          <td>Unassigned</td>
+          <td>
+            <div class="bar-wrap">
+              <div class="bar-fill" style="width:0.0%"></div>
+            </div>
+          </td>
+          <td>0/709</td>
+          <td>0%</td>
+          <td>N/A</td>
+          <td></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </section>
+  
+  
+    <section class="section">
+      <h2>Category Breakdown</h2>
+      <div class="cat-list"><div class="cat-row"><span>Other</span><span>709</span></div></div>
+    </section>
+  <div class="iframe-wrap">
+    <iframe src="dashboard.html" title="Interactive Dashboard"></iframe>
+  </div>
+</div>
+<div class="footer">Last synced: Apr 29, 2026 01:56 PM EST</div>
+</body>
+</html>

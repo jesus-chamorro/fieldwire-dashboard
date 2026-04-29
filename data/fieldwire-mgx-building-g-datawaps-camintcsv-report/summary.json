@@ -1,0 +1,25 @@
+{
+  "project_name": "Fieldwire Mgx Building G Datawaps Camintcsv Report",
+  "last_updated": "2026-04-29T18:56:23.261807+00:00",
+  "total_tasks": 332,
+  "completed_tasks": 0,
+  "percent_complete": 0.0,
+  "floors": [
+    {
+      "name": "Unassigned",
+      "total_tasks": 332,
+      "completed_tasks": 0,
+      "percent_complete": 0.0,
+      "last_activity": null,
+      "days_since_activity": -1,
+      "is_stale": false
+    }
+  ],
+  "blocked_tasks": [],
+  "todays_activity": [],
+  "category_breakdown": {
+    "Other": 332
+  },
+  "has_stale_floors": false,
+  "stale_floors": []
+}
