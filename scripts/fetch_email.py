@@ -4,10 +4,8 @@ import imaplib
 import email
 import os
 import re
-import time
 import urllib.request
 from email.header import decode_header
-from email.utils import formatdate
 from datetime import datetime, timezone
 
 
@@ -50,9 +48,9 @@ def fetch_emails(gmail_address, gmail_app_password, data_dir):
     try:
         mail.select("Fieldwire")
         since = datetime.now(timezone.utc).strftime("%d-%b-%Y")
-status, message_ids = mail.search(
-    None, f'(UNSEEN FROM "support@fieldwire.com" SUBJECT "report" SINCE "{since}")'
-)
+        status, message_ids = mail.search(
+            None, f'(UNSEEN FROM "support@fieldwire.com" SUBJECT "report" SINCE "{since}")'
+        )
 
         if status != "OK" or not message_ids[0]:
             print("No new Fieldwire report emails found.")
