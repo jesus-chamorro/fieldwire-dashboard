@@ -28,13 +28,13 @@ def slugify(name):
 
 
 def extract_project_name(subject):
-    match = re.search(r"Project\s+(.+?)\s*[-–—]\s*Task\s+Report", subject, re.IGNORECASE)
+    match = re.search(r"Project\s+(.+?)\s*[-\u2013\u2014]\s*Task\s+Report", subject, re.IGNORECASE)
     if match:
         return match.group(1).strip()
-    match = re.search(r"Project\s+(.+?)\s*[-–—]\s*.*Report", subject, re.IGNORECASE)
+    match = re.search(r"Project\s+(.+?)\s*[-\u2013\u2014]\s*.*Report", subject, re.IGNORECASE)
     if match:
         return match.group(1).strip()
-    cleaned = re.sub(r"\s*[-–—]\s*.*Report.*$", "", subject, flags=re.IGNORECASE)
+    cleaned = re.sub(r"\s*[-\u2013\u2014]\s*.*Report.*$", "", subject, flags=re.IGNORECASE)
     cleaned = re.sub(r"^(Re:|Fwd?:)\s*", "", cleaned, flags=re.IGNORECASE).strip()
     return cleaned if cleaned else "unknown-project"
 
@@ -52,7 +52,9 @@ def fetch_emails(gmail_address, gmail_app_password, data_dir):
 
     try:
         mail.select("INBOX")
-        status, message_ids = mail.search(None, '(UNSEEN FROM "support@fieldwire.com" SUBJECT "report")')
+        status, message_ids = mail.search(
+            None, '(UNSEEN FROM "support@fieldwire.com" SUBJECT "report")'
+        )
 
         if status != "OK" or not message_ids[0]:
             print("No new Fieldwire report emails found.")
@@ -88,14 +90,11 @@ def fetch_emails(gmail_address, gmail_app_password, data_dir):
                     filename = part.get_filename()
                     if not filename or not filename.lower().endswith(".csv"):
                         continue
-
                     project_dir = os.path.join(data_dir, project_slug)
                     os.makedirs(project_dir, exist_ok=True)
                     csv_path = os.path.join(project_dir, f"{today}.csv")
-
                     with open(csv_path, "wb") as f:
                         f.write(part.get_payload(decode=True))
-
                     print(f"  Saved CSV attachment: {csv_path}")
                     results.append({
                         "project_name": project_name,
@@ -108,6 +107,48 @@ def fetch_emails(gmail_address, gmail_app_password, data_dir):
 
                 # Method 2: Look for download link in email body
                 if not found:
+                    body_text = ""
                     for part in msg.walk():
                         content_type = part.get_content_type()
-                        if content_type not in ("text/plain", "text/html"):
+                        if content_type in ("text/plain", "text/html"):
+                            body_text += part.get_payload(decode=True).decode("utf-8", errors="replace")
+                    match = re.search(r'https://files\.us\.fieldwire\.com/\S+', body_text)
+                    if match:
+                        url = match.group(0).rstrip('">')
+                        print(f"  Found download link: {url}")
+                        project_dir = os.path.join(data_dir, project_slug)
+                        os.makedirs(project_dir, exist_ok=True)
+                        csv_path = os.path.join(project_dir, f"{today}.csv")
+                        urllib.request.urlretrieve(url, csv_path)
+                        print(f"  Downloaded CSV from link: {csv_path}")
+                        results.append({
+                            "project_name": project_name,
+                            "project_slug": project_slug,
+                            "csv_path": csv_path,
+                            "date": today,
+                        })
+                        found = True
+
+                if not found:
+                    print(f"  WARNING: No CSV found in email: {subject}")
+
+                mail.store(msg_id, "+FLAGS", "\\Seen")
+
+            except Exception as e:
+                print(f"ERROR: Failed to process email {msg_id}: {e}")
+                continue
+
+    finally:
+        mail.logout()
+
+    print(f"Fetched {len(results)} CSV(s).")
+    return results
+
+
+if __name__ == "__main__":
+    data_dir = os.path.join(os.path.dirname(__file__), "..", "data")
+    fetch_emails(
+        os.environ["GMAIL_ADDRESS"],
+        os.environ["GMAIL_APP_PASSWORD"],
+        data_dir,
+    )
