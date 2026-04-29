@@ -19,7 +19,7 @@ CATEGORY_CODES = {
     "70": "Infrastructure",
 }
 
-COMPLETED_STATUSES = {"Verified", "Device Mounted"}
+COMPLETED_STATUSES = {"SM - Phase 1: Rough-In", "SM - Phase 2: Terminating& Testing", "SM - Phase 3: Trim Out", "Tested - Failed - Photo uploaded", "Wire Roughed-in", "Tested - Passed - Photo uploaded", "Terminated", "Verified", "Device & MAC-Photo Uploaded"}
 
 EST = timezone(timedelta(hours=-5))
 
@@ -36,6 +36,7 @@ def parse_timestamp(ts_str):
         "%m/%d/%Y %H:%M",
         "%m/%d/%Y",
         "%Y-%m-%d",
+        "%Y-%m-%d %I:%M:%S %p",
     ):
         try:
             dt = datetime.strptime(ts_str.strip(), fmt)
@@ -88,12 +89,18 @@ def process_csv_file(csv_path, project_name):
     category_counts = {}
 
     for task in tasks:
-        task_name = task.get("Task Name", task.get("Task name", ""))
+       task_name = task.get("Title", "")
         status = task.get("Status", "")
-        location = task.get("Location", "")
+        tier1 = task.get("Tier 1", "").strip()
+        tier2 = task.get("Tier 2", "").strip()
+        tier3 = task.get("Tier 3", "").strip()
+        tier4 = task.get("Tier 4", "").strip()
+        tier5 = task.get("Tier 5", "").strip()
+        collection = task.get("Collection", "").strip()
+        location = f"{collection} > {tier1}" if tier1 else collection
         assignee = task.get("Assignee", "")
-        updated_at_str = task.get("Updated At", task.get("Updated at", ""))
-        tags = task.get("Tags", "")
+        updated_at_str = task.get("Last Updated", "")
+        tags = task.get("Tag 1", "")
 
         floor = extract_floor(location)
         updated_at = parse_timestamp(updated_at_str)
@@ -131,7 +138,8 @@ def process_csv_file(csv_path, project_name):
                 "updated_at": updated_at_str,
             })
 
-        cat = extract_category(task_name)
+        raw_cat = task.get("Category", "")
+        cat = raw_cat.split("-", 1)[1].strip() if "-" in raw_cat else raw_cat or "Other"
         category_counts[cat] = category_counts.get(cat, 0) + 1
 
     floor_list = []
