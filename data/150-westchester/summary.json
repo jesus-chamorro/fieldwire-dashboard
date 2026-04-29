@@ -1,13 +1,13 @@
 {
-  "project_name": "NJPAC",
-  "last_updated": "2026-04-29T19:14:22.620516+00:00",
-  "total_tasks": 709,
+  "project_name": "150 westchester",
+  "last_updated": "2026-04-29T19:14:22.626316+00:00",
+  "total_tasks": 497,
   "completed_tasks": 0,
   "percent_complete": 0.0,
   "floors": [
     {
       "name": "Unassigned",
-      "total_tasks": 709,
+      "total_tasks": 497,
       "completed_tasks": 0,
       "percent_complete": 0.0,
       "last_activity": null,
@@ -18,7 +18,7 @@
   "blocked_tasks": [],
   "todays_activity": [],
   "category_breakdown": {
-    "Other": 709
+    "Other": 497
   },
   "has_stale_floors": false,
   "stale_floors": []
