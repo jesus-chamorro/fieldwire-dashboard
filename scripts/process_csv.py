@@ -90,17 +90,17 @@ def process_csv_file(csv_path, project_name):
 
     for task in tasks:
        task_name = task.get("Title", "")
-        status = task.get("Status", "")
-        tier1 = task.get("Tier 1", "").strip()
-        tier2 = task.get("Tier 2", "").strip()
-        tier3 = task.get("Tier 3", "").strip()
-        tier4 = task.get("Tier 4", "").strip()
-        tier5 = task.get("Tier 5", "").strip()
-        collection = task.get("Collection", "").strip()
-        location = f"{collection} > {tier1}" if tier1 else collection
-        assignee = task.get("Assignee", "")
-        updated_at_str = task.get("Last Updated", "")
-        tags = task.get("Tag 1", "")
+       status = task.get("Status", "")
+       tier1 = task.get("Tier 1", "").strip()
+       tier2 = task.get("Tier 2", "").strip()
+       tier3 = task.get("Tier 3", "").strip()
+       tier4 = task.get("Tier 4", "").strip()
+       tier5 = task.get("Tier 5", "").strip()
+       collection = task.get("Collection", "").strip()
+       location = f"{collection} > {tier1}" if tier1 else collection
+       assignee = task.get("Assignee", "")
+       updated_at_str = task.get("Last Updated", "")
+       tags = task.get("Tag 1", "")
 
         floor = extract_floor(location)
         updated_at = parse_timestamp(updated_at_str)
