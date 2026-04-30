@@ -15,6 +15,10 @@
   .section { background: #1a1d27; border-radius: 12px; padding: 24px; border: 1px solid #2a2d3a; margin-bottom: 24px; }
   .section h2 { color: #818cf8; font-size: 17px; margin-bottom: 16px; }
   .muted { color: #6b7280; font-size: 14px; }
+  .overview .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 16px; }
+  .stat { background: #111318; border-radius: 8px; padding: 12px; text-align: center; }
+  .stat-num { display: block; font-size: 24px; font-weight: 700; color: #818cf8; }
+  .stat span:last-child { color: #6b7280; font-size: 13px; }
   .activity-feed { display: flex; flex-direction: column; gap: 8px; }
   .activity-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: #111318; border-radius: 8px; flex-wrap: wrap; }
   .status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
@@ -25,7 +29,7 @@
   table { width: 100%; border-collapse: collapse; }
   th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #2a2d3a; font-size: 14px; white-space: nowrap; }
   th { color: #9ca3af; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .bar-wrap { width: 140px; height: 8px; background: #2a2d3a; border-radius: 4px; overflow: hidden; }
+  .bar-wrap { width: 120px; height: 8px; background: #2a2d3a; border-radius: 4px; overflow: hidden; }
   .bar-fill { height: 100%; background: #818cf8; border-radius: 4px; transition: width 0.3s; }
   .badge { padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; }
   .badge-red { background: #7f1d1d; color: #fca5a5; }
@@ -46,9 +50,18 @@
     <a href="index.html">&larr; Back to Projects</a>
     <h1>NJPAC</h1>
   </div>
-  <span style="color:#6b7280;font-size:13px">Updated: Apr 30, 2026 07:37 AM EST</span>
+  <span style="color:#6b7280;font-size:13px">Updated: Apr 30, 2026 03:57 PM EST</span>
 </div>
 <div class="content">
+  
+    <section class="section overview">
+      <div class="stats-grid">
+        <div class="stat"><span class="stat-num">706/706</span> <span>touched</span></div>
+        <div class="stat"><span class="stat-num">0</span> <span>completed</span></div>
+        <div class="stat"><span class="stat-num">706</span> <span>in progress</span></div>
+        <div class="stat"><span class="stat-num">0</span> <span>not started</span></div>
+      </div>
+    </section>
   
         <section class="section">
           <h2>Today's Activity</h2>
@@ -59,17 +72,17 @@
       <h2>Floor Progress</h2>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Floor</th><th>Progress</th><th>Tasks</th><th>%</th><th>Last Activity</th><th></th></tr></thead>
+          <thead><tr><th>Floor</th><th>Progress</th><th>Status</th><th>% Touched</th><th>Last Activity</th><th></th></tr></thead>
           <tbody>
         <tr>
           <td>Building A</td>
           <td>
             <div class="bar-wrap">
-              <div class="bar-fill" style="width:4.0%"></div>
+              <div class="bar-fill" style="width:100.0%"></div>
             </div>
           </td>
-          <td>18/446</td>
-          <td>4%</td>
+          <td>0/446</td>
+          <td>100%</td>
           <td>Apr 28</td>
           <td></td>
         </tr>
@@ -77,11 +90,11 @@
           <td>Building B</td>
           <td>
             <div class="bar-wrap">
-              <div class="bar-fill" style="width:0.0%"></div>
+              <div class="bar-fill" style="width:100.0%"></div>
             </div>
           </td>
           <td>0/260</td>
-          <td>0%</td>
+          <td>100%</td>
           <td>Apr 28</td>
           <td></td>
         </tr></tbody>
@@ -98,6 +111,6 @@
     <iframe src="dashboard.html" title="Interactive Dashboard"></iframe>
   </div>
 </div>
-<div class="footer">Last synced: Apr 30, 2026 07:37 AM EST</div>
+<div class="footer">Last synced: Apr 30, 2026 03:57 PM EST</div>
 </body>
 </html>

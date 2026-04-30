@@ -11,11 +11,12 @@
   .header h1 { color: #818cf8; font-size: 24px; }
   .header .sync { color: #6b7280; font-size: 13px; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; padding: 32px; max-width: 1400px; margin: 0 auto; }
-  .card { background: #1a1d27; border-radius: 12px; padding: 28px; border: 1px solid #2a2d3a; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .card { background: #1a1d27; border-radius: 12px; padding: 28px; border: 1px solid #2a2d3a; display: flex; flex-direction: column; align-items: center; gap: 8px; }
   .card h3 { color: #e2e4ed; font-size: 18px; text-align: center; }
   .progress-ring-wrap { position: relative; width: 100px; height: 100px; }
   .pct-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 20px; font-weight: 700; color: #818cf8; }
   .tasks-count { color: #9ca3af; font-size: 14px; }
+  .detail-text { color: #6b7280; font-size: 12px; text-align: center; }
   .today-count { color: #6b7280; font-size: 13px; }
   .badges { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; min-height: 28px; }
   .badge { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
@@ -30,7 +31,7 @@
 <body>
 <div class="header">
   <h1>Younitech Dashboard</h1>
-  <span class="sync">Last synced: Apr 30, 2026 07:37 AM EST</span>
+  <span class="sync">Last synced: Apr 30, 2026 03:57 PM EST</span>
 </div>
 
 <div class="grid">
@@ -40,12 +41,13 @@
             <svg width="100" height="100" viewBox="0 0 100 100">
               <circle cx="50" cy="50" r="40" fill="none" stroke="#2a2d3a" stroke-width="8"/>
               <circle cx="50" cy="50" r="40" fill="none" stroke="#818cf8" stroke-width="8"
-                stroke-dasharray="251.3272" stroke-dashoffset="46.74685919999999"
+                stroke-dasharray="251.3272" stroke-dashoffset="0.0"
                 stroke-linecap="round" transform="rotate(-90 50 50)"/>
             </svg>
-            <span class="pct-label">81%</span>
+            <span class="pct-label">100%</span>
           </div>
-          <p class="tasks-count">367/451 tasks complete</p>
+          <p class="tasks-count">451/451 tasks in progress</p>
+          <p class="detail-text">227 completed &middot; 224 in progress &middot; 0 not started</p>
           <p class="today-count">0 tasks updated today</p>
           <div class="badges"><span class="badge badge-red">Inactive Floor</span><span class="badge badge-yellow">22 Blocked</span></div>
           <a href="project-150-westchester.html" class="btn">View Dashboard</a>
@@ -56,12 +58,13 @@
             <svg width="100" height="100" viewBox="0 0 100 100">
               <circle cx="50" cy="50" r="40" fill="none" stroke="#2a2d3a" stroke-width="8"/>
               <circle cx="50" cy="50" r="40" fill="none" stroke="#818cf8" stroke-width="8"
-                stroke-dasharray="251.3272" stroke-dashoffset="245.04402000000002"
+                stroke-dasharray="251.3272" stroke-dashoffset="0.0"
                 stroke-linecap="round" transform="rotate(-90 50 50)"/>
             </svg>
-            <span class="pct-label">2%</span>
+            <span class="pct-label">100%</span>
           </div>
-          <p class="tasks-count">18/706 tasks complete</p>
+          <p class="tasks-count">706/706 tasks in progress</p>
+          <p class="detail-text">0 completed &middot; 706 in progress &middot; 0 not started</p>
           <p class="today-count">0 tasks updated today</p>
           <div class="badges"></div>
           <a href="project-njpac.html" class="btn">View Dashboard</a>
@@ -72,16 +75,17 @@
             <svg width="100" height="100" viewBox="0 0 100 100">
               <circle cx="50" cy="50" r="40" fill="none" stroke="#2a2d3a" stroke-width="8"/>
               <circle cx="50" cy="50" r="40" fill="none" stroke="#818cf8" stroke-width="8"
-                stroke-dasharray="251.3272" stroke-dashoffset="251.3272"
+                stroke-dasharray="251.3272" stroke-dashoffset="0.0"
                 stroke-linecap="round" transform="rotate(-90 50 50)"/>
             </svg>
-            <span class="pct-label">0%</span>
+            <span class="pct-label">100%</span>
           </div>
-          <p class="tasks-count">0/1182 tasks complete</p>
+          <p class="tasks-count">1179/1179 tasks in progress</p>
+          <p class="detail-text">0 completed &middot; 1179 in progress &middot; 0 not started</p>
           <p class="today-count">0 tasks updated today</p>
-          <div class="badges"></div>
+          <div class="badges"><span class="badge badge-red">Inactive Floor</span></div>
           <a href="project-younity.html" class="btn">View Dashboard</a>
         </div></div>
-<div class="footer">Last synced: Apr 30, 2026 07:37 AM EST</div>
+<div class="footer">Last synced: Apr 30, 2026 03:57 PM EST</div>
 </body>
 </html>

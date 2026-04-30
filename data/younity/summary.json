@@ -1,25 +1,53 @@
 {
   "project_name": "Younity",
-  "last_updated": "2026-04-30T11:56:02.271227+00:00",
-  "total_tasks": 1182,
+  "last_updated": "2026-04-30T20:57:16.456120+00:00",
+  "total_tasks": 1179,
   "completed_tasks": 0,
+  "in_progress_tasks": 1179,
+  "not_started_tasks": 0,
+  "touched_tasks": 1179,
+  "percent_touched": 100.0,
   "percent_complete": 0.0,
   "floors": [
     {
       "name": "Unassigned",
-      "total_tasks": 1182,
+      "total_tasks": 1179,
       "completed_tasks": 0,
+      "in_progress_tasks": 1179,
+      "not_started_tasks": 0,
       "percent_complete": 0.0,
-      "last_activity": null,
-      "days_since_activity": -1,
-      "is_stale": false
+      "percent_in_progress": 100.0,
+      "percent_touched": 100.0,
+      "last_activity": "2026-04-23T13:04:43+00:00",
+      "days_since_activity": 7,
+      "is_stale": true
     }
   ],
   "blocked_tasks": [],
   "todays_activity": [],
   "category_breakdown": {
-    "Other": 1182
+    "Audio Visual": 5,
+    "Infrastructure": 9,
+    "Wireless Access Point": 21,
+    "CCTV": 210,
+    "Data Ports": 27,
+    "Access Control": 38,
+    "SITE MANAGEMENT": 3,
+    "Floor Status": 59,
+    "In-Unit Intercom": 224,
+    "WAPs": 540,
+    "IDF": 17,
+    "Service Intercom": 4,
+    "EoC": 7,
+    "NVR": 2,
+    "ACSP": 5,
+    "P2P": 3,
+    "MDF": 3,
+    "Site Mgmt.": 1,
+    "Smart Locks": 1
   },
-  "has_stale_floors": false,
-  "stale_floors": []
+  "has_stale_floors": true,
+  "stale_floors": [
+    "Unassigned"
+  ]
 }

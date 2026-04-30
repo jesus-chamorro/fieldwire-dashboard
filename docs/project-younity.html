@@ -15,6 +15,10 @@
   .section { background: #1a1d27; border-radius: 12px; padding: 24px; border: 1px solid #2a2d3a; margin-bottom: 24px; }
   .section h2 { color: #818cf8; font-size: 17px; margin-bottom: 16px; }
   .muted { color: #6b7280; font-size: 14px; }
+  .overview .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 16px; }
+  .stat { background: #111318; border-radius: 8px; padding: 12px; text-align: center; }
+  .stat-num { display: block; font-size: 24px; font-weight: 700; color: #818cf8; }
+  .stat span:last-child { color: #6b7280; font-size: 13px; }
   .activity-feed { display: flex; flex-direction: column; gap: 8px; }
   .activity-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: #111318; border-radius: 8px; flex-wrap: wrap; }
   .status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
@@ -25,7 +29,7 @@
   table { width: 100%; border-collapse: collapse; }
   th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #2a2d3a; font-size: 14px; white-space: nowrap; }
   th { color: #9ca3af; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .bar-wrap { width: 140px; height: 8px; background: #2a2d3a; border-radius: 4px; overflow: hidden; }
+  .bar-wrap { width: 120px; height: 8px; background: #2a2d3a; border-radius: 4px; overflow: hidden; }
   .bar-fill { height: 100%; background: #818cf8; border-radius: 4px; transition: width 0.3s; }
   .badge { padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; }
   .badge-red { background: #7f1d1d; color: #fca5a5; }
@@ -46,9 +50,18 @@
     <a href="index.html">&larr; Back to Projects</a>
     <h1>Younity</h1>
   </div>
-  <span style="color:#6b7280;font-size:13px">Updated: Apr 30, 2026 07:37 AM EST</span>
+  <span style="color:#6b7280;font-size:13px">Updated: Apr 30, 2026 03:57 PM EST</span>
 </div>
 <div class="content">
+  
+    <section class="section overview">
+      <div class="stats-grid">
+        <div class="stat"><span class="stat-num">1179/1179</span> <span>touched</span></div>
+        <div class="stat"><span class="stat-num">0</span> <span>completed</span></div>
+        <div class="stat"><span class="stat-num">1179</span> <span>in progress</span></div>
+        <div class="stat"><span class="stat-num">0</span> <span>not started</span></div>
+      </div>
+    </section>
   
         <section class="section">
           <h2>Today's Activity</h2>
@@ -59,19 +72,19 @@
       <h2>Floor Progress</h2>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Floor</th><th>Progress</th><th>Tasks</th><th>%</th><th>Last Activity</th><th></th></tr></thead>
+          <thead><tr><th>Floor</th><th>Progress</th><th>Status</th><th>% Touched</th><th>Last Activity</th><th></th></tr></thead>
           <tbody>
         <tr>
           <td>Unassigned</td>
           <td>
             <div class="bar-wrap">
-              <div class="bar-fill" style="width:0.0%"></div>
+              <div class="bar-fill" style="width:100.0%"></div>
             </div>
           </td>
-          <td>0/1182</td>
-          <td>0%</td>
-          <td>N/A</td>
-          <td></td>
+          <td>0/1179</td>
+          <td>100%</td>
+          <td>Apr 23</td>
+          <td><span class="badge badge-red">STALE 7d+</span></td>
         </tr></tbody>
         </table>
       </div>
@@ -80,12 +93,12 @@
   
     <section class="section">
       <h2>Category Breakdown</h2>
-      <div class="cat-list"><div class="cat-row"><span>Other</span><span>1182</span></div></div>
+      <div class="cat-list"><div class="cat-row"><span>WAPs</span><span>540</span></div><div class="cat-row"><span>In-Unit Intercom</span><span>224</span></div><div class="cat-row"><span>CCTV</span><span>210</span></div><div class="cat-row"><span>Floor Status</span><span>59</span></div><div class="cat-row"><span>Access Control</span><span>38</span></div><div class="cat-row"><span>Data Ports</span><span>27</span></div><div class="cat-row"><span>Wireless Access Point</span><span>21</span></div><div class="cat-row"><span>IDF</span><span>17</span></div><div class="cat-row"><span>Infrastructure</span><span>9</span></div><div class="cat-row"><span>EoC</span><span>7</span></div><div class="cat-row"><span>Audio Visual</span><span>5</span></div><div class="cat-row"><span>ACSP</span><span>5</span></div><div class="cat-row"><span>Service Intercom</span><span>4</span></div><div class="cat-row"><span>SITE MANAGEMENT</span><span>3</span></div><div class="cat-row"><span>P2P</span><span>3</span></div><div class="cat-row"><span>MDF</span><span>3</span></div><div class="cat-row"><span>NVR</span><span>2</span></div><div class="cat-row"><span>Site Mgmt.</span><span>1</span></div><div class="cat-row"><span>Smart Locks</span><span>1</span></div></div>
     </section>
   <div class="iframe-wrap">
     <iframe src="dashboard.html" title="Interactive Dashboard"></iframe>
   </div>
 </div>
-<div class="footer">Last synced: Apr 30, 2026 07:37 AM EST</div>
+<div class="footer">Last synced: Apr 30, 2026 03:57 PM EST</div>
 </body>
 </html>
