@@ -8,20 +8,22 @@ import re
 from datetime import datetime, timezone, timedelta
 
 
-# ── What counts as "done" from your bosses' perspective ──────────────────────
+# ── Status classification ─────────────────────────────────
+NOT_STARTED_STATUSES = {
+    "",
+    "Not Started",
+}
+
+# Truly finished, signed-off statuses (adjust to your workflow)
 COMPLETED_STATUSES = {
-    "Cable Pulled",
-    "Wire Roughed-in",
-    "Terminated",
-    "Terminated - Photo uploaded",
-    "Terminated - Photo Uploaded",
-    "Device & MAC-Photo Uploaded",
-    "Tested - Passed - Photo uploaded",
     "Tested - PASS - Photo Uploaded",
+    "Tested - Passed - Photo uploaded",
     "Verified",
-    "FS-Framed",
     "SM - Phase 3: Trim Out",
 }
+
+# Everything else is considered In Progress
+
 
 EST = timezone(timedelta(hours=-5))
 
@@ -87,10 +89,10 @@ def _read_csv_tasks(csv_path):
     with open(csv_path, "r", encoding=encoding) as f:
         lines = f.readlines()
 
-    # 3. Find the real header row — it starts with "ID\t"
+    # 3. Find the real header row — it starts with "ID\t" (per-project) or "Project name\t" (account-wide)
     header_idx = None
     for i, line in enumerate(lines):
-        if line.strip().startswith("ID\t"):
+        if line.strip().startswith("ID\t") or line.strip().startswith("Project name\t"):
             header_idx = i
             break
 
@@ -107,7 +109,7 @@ def process_csv_file(csv_path, project_name):
     now = datetime.now(timezone.utc)
     today_str = now.strftime("%Y-%m-%d")
 
-    # ── Read tasks ────────────────────────────────────────────────────────────
+    # ── Read tasks ──────────────────────────────────────────
     try:
         tasks = _read_csv_tasks(csv_path)
     except Exception as e:
@@ -118,7 +120,7 @@ def process_csv_file(csv_path, project_name):
         print(f"WARNING: CSV {csv_path} has no data rows.")
         return None
 
-    # ── Aggregate ─────────────────────────────────────────────────────────────
+    # ── Aggregate ───────────────────────────────────────────
     floors = {}
     blocked_tasks = []
     todays_activity = []
@@ -146,13 +148,27 @@ def process_csv_file(csv_path, project_name):
         floor = extract_floor(location)
         updated_at = parse_timestamp(updated_at_str)
 
+        # Determine task state
+        status_clean = status.strip()
+        if status_clean in NOT_STARTED_STATUSES:
+            task_state = "not_started"
+        elif status_clean in COMPLETED_STATUSES:
+            task_state = "completed"
+        else:
+            task_state = "in_progress"
+
         # Floor tracking
         if floor not in floors:
-            floors[floor] = {"total": 0, "completed": 0, "last_activity": None}
+            floors[floor] = {
+                "total": 0,
+                "not_started": 0,
+                "in_progress": 0,
+                "completed": 0,
+                "last_activity": None,
+            }
 
         floors[floor]["total"] += 1
-        if status in COMPLETED_STATUSES:
-            floors[floor]["completed"] += 1
+        floors[floor][task_state] += 1
 
         if updated_at:
             prev = floors[floor]["last_activity"]
@@ -187,23 +203,29 @@ def process_csv_file(csv_path, project_name):
         cat = normalize_category(raw_cat)
         category_counts[cat] = category_counts.get(cat, 0) + 1
 
-    # ── Build floor list ──────────────────────────────────────────────────────
+    # ── Build floor list ────────────────────────────────────
     floor_list = []
     stale_floors = []
     total_tasks = 0
     completed_tasks = 0
+    in_progress_tasks = 0
+    not_started_tasks = 0
 
     for floor_name, info in sorted(floors.items()):
-        total_tasks    += info["total"]
-        completed_tasks += info["completed"]
+        total_tasks        += info["total"]
+        completed_tasks    += info["completed"]
+        in_progress_tasks  += info["in_progress"]
+        not_started_tasks  += info["not_started"]
 
-        pct = (info["completed"] / info["total"] * 100) if info["total"] > 0 else 0
+        total_floor = info["total"] or 1
+        pct_completed       = round(info["completed"] / total_floor * 100, 1)
+        pct_in_progress     = round(info["in_progress"] / total_floor * 100, 1)
+        pct_touched = round((info["in_progress"] + info["completed"]) / total_floor * 100, 1)
 
         last_act = info["last_activity"]
         days_since = None
         is_stale = False
         last_act_iso = None
-
         if last_act:
             last_act_iso = last_act.isoformat()
             days_since = (now - last_act).days
@@ -216,20 +238,30 @@ def process_csv_file(csv_path, project_name):
             "name": floor_name,
             "total_tasks": info["total"],
             "completed_tasks": info["completed"],
-            "percent_complete": round(pct, 1),
+            "in_progress_tasks": info["in_progress"],
+            "not_started_tasks": info["not_started"],
+            "percent_complete": pct_completed,
+            "percent_in_progress": pct_in_progress,
+            "percent_touched": pct_touched,
             "last_activity": last_act_iso,
             "days_since_activity": days_since if days_since is not None else -1,
             "is_stale": is_stale,
         })
 
-    overall_pct = (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
+    touched_tasks = in_progress_tasks + completed_tasks
+    overall_pct_touched = round(touched_tasks / total_tasks * 100, 1) if total_tasks else 0
+    overall_pct_completed = round(completed_tasks / total_tasks * 100, 1) if total_tasks else 0
 
     return {
         "project_name": project_name,
         "last_updated": now.isoformat(),
         "total_tasks": total_tasks,
         "completed_tasks": completed_tasks,
-        "percent_complete": round(overall_pct, 1),
+        "in_progress_tasks": in_progress_tasks,
+        "not_started_tasks": not_started_tasks,
+        "touched_tasks": touched_tasks,
+        "percent_touched": overall_pct_touched,
+        "percent_complete": overall_pct_completed,
         "floors": floor_list,
         "blocked_tasks": blocked_tasks,
         "todays_activity": todays_activity,
