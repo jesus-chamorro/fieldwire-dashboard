@@ -1,0 +1,25 @@
+{
+  "project_name": "Younity",
+  "last_updated": "2026-04-30T11:56:02.271227+00:00",
+  "total_tasks": 1182,
+  "completed_tasks": 0,
+  "percent_complete": 0.0,
+  "floors": [
+    {
+      "name": "Unassigned",
+      "total_tasks": 1182,
+      "completed_tasks": 0,
+      "percent_complete": 0.0,
+      "last_activity": null,
+      "days_since_activity": -1,
+      "is_stale": false
+    }
+  ],
+  "blocked_tasks": [],
+  "todays_activity": [],
+  "category_breakdown": {
+    "Other": 1182
+  },
+  "has_stale_floors": false,
+  "stale_floors": []
+}
