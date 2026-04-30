@@ -1,24 +1,49 @@
 {
   "project_name": "NJPAC",
-  "last_updated": "2026-04-30T11:40:42.634920+00:00",
-  "total_tasks": 709,
-  "completed_tasks": 0,
-  "percent_complete": 0.0,
+  "last_updated": "2026-04-30T12:19:35.487669+00:00",
+  "total_tasks": 706,
+  "completed_tasks": 18,
+  "percent_complete": 2.5,
   "floors": [
     {
-      "name": "Unassigned",
-      "total_tasks": 709,
+      "name": "Building A",
+      "total_tasks": 446,
+      "completed_tasks": 18,
+      "percent_complete": 4.0,
+      "last_activity": "2026-04-28T13:59:58+00:00",
+      "days_since_activity": 1,
+      "is_stale": false
+    },
+    {
+      "name": "Building B",
+      "total_tasks": 260,
       "completed_tasks": 0,
       "percent_complete": 0.0,
-      "last_activity": null,
-      "days_since_activity": -1,
+      "last_activity": "2026-04-28T14:06:41+00:00",
+      "days_since_activity": 1,
       "is_stale": false
     }
   ],
   "blocked_tasks": [],
   "todays_activity": [],
   "category_breakdown": {
-    "Other": 709
+    "Site Mgmt.": 1,
+    "Floor Status": 34,
+    "Access Control": 43,
+    "ACSP": 7,
+    "CCTV": 94,
+    "NVR": 1,
+    "EoC": 12,
+    "WAPs": 388,
+    "IDF": 11,
+    "MDF": 2,
+    "P2P": 1,
+    "Data Ports": 38,
+    "Service Intercom": 7,
+    "AV": 9,
+    "Speakers": 54,
+    "Television": 2,
+    "AV Headend": 2
   },
   "has_stale_floors": false,
   "stale_floors": []

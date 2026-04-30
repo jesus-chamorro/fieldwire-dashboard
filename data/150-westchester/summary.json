@@ -1,25 +1,317 @@
 {
   "project_name": "150 westchester",
-  "last_updated": "2026-04-30T11:40:42.643514+00:00",
-  "total_tasks": 497,
-  "completed_tasks": 0,
-  "percent_complete": 0.0,
+  "last_updated": "2026-04-30T12:19:35.573690+00:00",
+  "total_tasks": 451,
+  "completed_tasks": 367,
+  "percent_complete": 81.4,
   "floors": [
     {
-      "name": "Unassigned",
-      "total_tasks": 497,
+      "name": "10th fl",
+      "total_tasks": 29,
+      "completed_tasks": 28,
+      "percent_complete": 96.6,
+      "last_activity": "2026-04-14T14:01:03+00:00",
+      "days_since_activity": 15,
+      "is_stale": true
+    },
+    {
+      "name": "11th fl",
+      "total_tasks": 28,
+      "completed_tasks": 26,
+      "percent_complete": 92.9,
+      "last_activity": "2026-04-23T08:43:01+00:00",
+      "days_since_activity": 7,
+      "is_stale": true
+    },
+    {
+      "name": "12th fl",
+      "total_tasks": 48,
+      "completed_tasks": 30,
+      "percent_complete": 62.5,
+      "last_activity": "2026-04-23T08:44:31+00:00",
+      "days_since_activity": 7,
+      "is_stale": true
+    },
+    {
+      "name": "1st fl",
+      "total_tasks": 17,
+      "completed_tasks": 16,
+      "percent_complete": 94.1,
+      "last_activity": "2026-04-20T09:49:23+00:00",
+      "days_since_activity": 10,
+      "is_stale": true
+    },
+    {
+      "name": "2nd fl",
+      "total_tasks": 17,
+      "completed_tasks": 15,
+      "percent_complete": 88.2,
+      "last_activity": "2026-04-14T13:59:10+00:00",
+      "days_since_activity": 15,
+      "is_stale": true
+    },
+    {
+      "name": "3rd fl",
+      "total_tasks": 46,
+      "completed_tasks": 44,
+      "percent_complete": 95.7,
+      "last_activity": "2026-03-05T08:02:17+00:00",
+      "days_since_activity": 56,
+      "is_stale": true
+    },
+    {
+      "name": "4th fl",
+      "total_tasks": 30,
+      "completed_tasks": 28,
+      "percent_complete": 93.3,
+      "last_activity": "2026-02-17T16:46:58+00:00",
+      "days_since_activity": 71,
+      "is_stale": true
+    },
+    {
+      "name": "5th fl",
+      "total_tasks": 28,
+      "completed_tasks": 27,
+      "percent_complete": 96.4,
+      "last_activity": "2026-02-17T16:46:58+00:00",
+      "days_since_activity": 71,
+      "is_stale": true
+    },
+    {
+      "name": "6th fl",
+      "total_tasks": 29,
+      "completed_tasks": 28,
+      "percent_complete": 96.6,
+      "last_activity": "2026-02-17T16:46:58+00:00",
+      "days_since_activity": 71,
+      "is_stale": true
+    },
+    {
+      "name": "7th fl",
+      "total_tasks": 28,
+      "completed_tasks": 27,
+      "percent_complete": 96.4,
+      "last_activity": "2026-03-16T13:21:44+00:00",
+      "days_since_activity": 44,
+      "is_stale": true
+    },
+    {
+      "name": "8th fl",
+      "total_tasks": 29,
+      "completed_tasks": 28,
+      "percent_complete": 96.6,
+      "last_activity": "2026-03-16T12:25:16+00:00",
+      "days_since_activity": 44,
+      "is_stale": true
+    },
+    {
+      "name": "9th fl",
+      "total_tasks": 28,
+      "completed_tasks": 27,
+      "percent_complete": 96.4,
+      "last_activity": "2026-03-16T10:07:15+00:00",
+      "days_since_activity": 45,
+      "is_stale": true
+    },
+    {
+      "name": "Cellar",
+      "total_tasks": 37,
+      "completed_tasks": 29,
+      "percent_complete": 78.4,
+      "last_activity": "2026-04-14T14:02:58+00:00",
+      "days_since_activity": 15,
+      "is_stale": true
+    },
+    {
+      "name": "Outdoor",
+      "total_tasks": 13,
+      "completed_tasks": 13,
+      "percent_complete": 100.0,
+      "last_activity": "2026-02-17T16:47:01+00:00",
+      "days_since_activity": 71,
+      "is_stale": true
+    },
+    {
+      "name": "Roof",
+      "total_tasks": 41,
       "completed_tasks": 0,
       "percent_complete": 0.0,
-      "last_activity": null,
-      "days_since_activity": -1,
+      "last_activity": "2026-02-18T12:24:25+00:00",
+      "days_since_activity": 70,
+      "is_stale": true
+    },
+    {
+      "name": "Unassigned",
+      "total_tasks": 3,
+      "completed_tasks": 1,
+      "percent_complete": 33.3,
+      "last_activity": "2026-04-29T15:12:56+00:00",
+      "days_since_activity": 0,
       "is_stale": false
     }
   ],
-  "blocked_tasks": [],
+  "blocked_tasks": [
+    {
+      "task_name": "SC-1-01",
+      "location": "1st fl",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:43 PM"
+    },
+    {
+      "task_name": "SC-2-01",
+      "location": "2nd fl",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:41 PM"
+    },
+    {
+      "task_name": "EI-08",
+      "location": "8th fl",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:41 PM"
+    },
+    {
+      "task_name": "9th Floor status",
+      "location": "9th fl",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-25 08:48:44 AM"
+    },
+    {
+      "task_name": "10th Floor status",
+      "location": "10th fl",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-04-14 02:01:03 PM"
+    },
+    {
+      "task_name": "EI-10",
+      "location": "10th fl",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:53 PM"
+    },
+    {
+      "task_name": "11th Floor status",
+      "location": "11th fl",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-04-23 08:43:01 AM"
+    },
+    {
+      "task_name": "Need to wait for electrician to install riser box",
+      "location": "11th fl",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:58 PM"
+    },
+    {
+      "task_name": "12th Floor status",
+      "location": "12th fl",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-04-23 08:44:31 AM"
+    },
+    {
+      "task_name": "Need core",
+      "location": "12th fl",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:56 PM"
+    },
+    {
+      "task_name": "Need core",
+      "location": "12th fl",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:56 PM"
+    },
+    {
+      "task_name": "EI-12",
+      "location": "12th fl",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:56 PM"
+    },
+    {
+      "task_name": "Cellar",
+      "location": "Cellar",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:41 PM"
+    },
+    {
+      "task_name": "MDF-C",
+      "location": "Cellar",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-03-20 08:46:19 AM"
+    },
+    {
+      "task_name": "Elevator CR",
+      "location": "Cellar",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:41 PM"
+    },
+    {
+      "task_name": "011A",
+      "location": "Outdoor",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:43 PM"
+    },
+    {
+      "task_name": "SC-C-13",
+      "location": "Outdoor",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:41 PM"
+    },
+    {
+      "task_name": "SC-1-09",
+      "location": "Outdoor",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:43 PM"
+    },
+    {
+      "task_name": "Roof Floor status",
+      "location": "Roof",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:41 PM"
+    },
+    {
+      "task_name": "Need core",
+      "location": "Roof",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:58 PM"
+    },
+    {
+      "task_name": "Need core",
+      "location": "Roof",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:58 PM"
+    },
+    {
+      "task_name": "Need core",
+      "location": "Roof",
+      "assignee": "wade.dequarn@younitechs.com",
+      "last_updated": "2026-02-17 04:46:58 PM"
+    }
+  ],
   "todays_activity": [],
   "category_breakdown": {
-    "Other": 497
+    "SITE MANAGEMENT": 16,
+    "Access Control": 18,
+    "CCTV": 76,
+    "Wireless Access Point": 258,
+    "Audio Visual": 52,
+    "Infrastructure": 20,
+    "Data Ports": 8,
+    "Intercoms": 2,
+    "Other": 1
   },
-  "has_stale_floors": false,
-  "stale_floors": []
+  "has_stale_floors": true,
+  "stale_floors": [
+    "10th fl",
+    "11th fl",
+    "12th fl",
+    "1st fl",
+    "2nd fl",
+    "3rd fl",
+    "4th fl",
+    "5th fl",
+    "6th fl",
+    "7th fl",
+    "8th fl",
+    "9th fl",
+    "Cellar",
+    "Outdoor",
+    "Roof"
+  ]
 }
