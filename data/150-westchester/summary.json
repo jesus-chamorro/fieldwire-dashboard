@@ -1,6 +1,6 @@
 {
   "project_name": "150 westchester",
-  "last_updated": "2026-04-30T12:19:35.573690+00:00",
+  "last_updated": "2026-04-30T12:37:30.648848+00:00",
   "total_tasks": 451,
   "completed_tasks": 367,
   "percent_complete": 81.4,
@@ -101,7 +101,7 @@
       "completed_tasks": 28,
       "percent_complete": 96.6,
       "last_activity": "2026-03-16T12:25:16+00:00",
-      "days_since_activity": 44,
+      "days_since_activity": 45,
       "is_stale": true
     },
     {
@@ -137,7 +137,7 @@
       "completed_tasks": 0,
       "percent_complete": 0.0,
       "last_activity": "2026-02-18T12:24:25+00:00",
-      "days_since_activity": 70,
+      "days_since_activity": 71,
       "is_stale": true
     },
     {
