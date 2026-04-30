@@ -1,25 +1,27 @@
 """Process Fieldwire CSV exports into summary JSON files."""
 
 import csv
+import io
 import json
 import os
 import re
 from datetime import datetime, timezone, timedelta
 
 
-CATEGORY_CODES = {
-    "00": "Site Mgmt",
-    "10": "Access Control",
-    "11": "Smart Locks",
-    "20": "CCTV",
-    "30": "WAPs",
-    "40": "Data Ports",
-    "50": "Intercom",
-    "60": "AV",
-    "70": "Infrastructure",
+# ── What counts as "done" from your bosses' perspective ──────────────────────
+COMPLETED_STATUSES = {
+    "Cable Pulled",
+    "Wire Roughed-in",
+    "Terminated",
+    "Terminated - Photo uploaded",
+    "Terminated - Photo Uploaded",
+    "Device & MAC-Photo Uploaded",
+    "Tested - Passed - Photo uploaded",
+    "Tested - PASS - Photo Uploaded",
+    "Verified",
+    "FS-Framed",
+    "SM - Phase 3: Trim Out",
 }
-
-COMPLETED_STATUSES = {"SM - Phase 1: Rough-In", "SM - Phase 2: Terminating& Testing", "SM - Phase 3: Trim Out", "Tested - Failed - Photo uploaded", "Wire Roughed-in", "Tested - Passed - Photo uploaded", "Terminated", "Verified", "Device & MAC-Photo Uploaded"}
 
 EST = timezone(timedelta(hours=-5))
 
@@ -28,6 +30,7 @@ def parse_timestamp(ts_str):
     if not ts_str or not ts_str.strip():
         return None
     for fmt in (
+        "%Y-%m-%d %I:%M:%S %p",   # 2026-04-28 11:12:09 AM  ← Fieldwire default
         "%Y-%m-%dT%H:%M:%S%z",
         "%Y-%m-%dT%H:%M:%S.%f%z",
         "%Y-%m-%d %H:%M:%S %z",
@@ -36,7 +39,6 @@ def parse_timestamp(ts_str):
         "%m/%d/%Y %H:%M",
         "%m/%d/%Y",
         "%Y-%m-%d",
-        "%Y-%m-%d %I:%M:%S %p",
     ):
         try:
             dt = datetime.strptime(ts_str.strip(), fmt)
@@ -49,71 +51,107 @@ def parse_timestamp(ts_str):
 
 
 def extract_floor(location):
+    """Return the top-level location name, or 'Unassigned' if empty."""
     if not location or not location.strip():
         return "Unassigned"
-    return location.strip().split(" > ")[0].strip()
+    return location.strip().split(" > ")[0].strip() or "Unassigned"
 
 
-def extract_category(task_name):
-    if not task_name:
+def normalize_category(raw):
+    """
+    '10-Access Control'      → 'Access Control'
+    '03-Wireless Access Point' → 'Wireless Access Point'
+    'Verified'               → 'Verified'
+    ''                       → 'Other'
+    """
+    raw = (raw or "").strip()
+    if not raw:
         return "Other"
-    match = re.match(r"^(\d{2})\b", task_name.strip())
-    if match:
-        code = match.group(1)
-        return CATEGORY_CODES.get(code, "Other")
-    return "Other"
+    if "-" in raw:
+        _, rest = raw.split("-", 1)
+        return rest.strip() or raw
+    return raw
+
+
+def _read_csv_tasks(csv_path):
+    """
+    Open a Fieldwire CSV (UTF-16 or UTF-8), skip the 3 metadata lines,
+    parse as tab-delimited, and return a list of row dicts.
+    """
+    # 1. Detect encoding from BOM
+    with open(csv_path, "rb") as f:
+        bom = f.read(2)
+    encoding = "utf-16" if bom in (b"\xff\xfe", b"\xfe\xff") else "utf-8-sig"
+
+    # 2. Read all lines
+    with open(csv_path, "r", encoding=encoding) as f:
+        lines = f.readlines()
+
+    # 3. Find the real header row — it starts with "ID\t"
+    header_idx = None
+    for i, line in enumerate(lines):
+        if line.strip().startswith("ID\t"):
+            header_idx = i
+            break
+
+    if header_idx is None:
+        raise ValueError(f"Cannot find header row in {csv_path}")
+
+    # 4. Feed only header + data into DictReader with tab delimiter
+    content = "".join(lines[header_idx:])
+    reader = csv.DictReader(io.StringIO(content), delimiter="\t")
+    return list(reader)
 
 
 def process_csv_file(csv_path, project_name):
     now = datetime.now(timezone.utc)
     today_str = now.strftime("%Y-%m-%d")
 
-    tasks = []
+    # ── Read tasks ────────────────────────────────────────────────────────────
     try:
-        encoding = "utf-16" if open(csv_path, "rb").read(2) in (b'\xff\xfe', b'\xfe\xff') else "utf-8-sig"
-        with open(csv_path, "r", encoding=encoding) as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                tasks.append(row)
+        tasks = _read_csv_tasks(csv_path)
     except Exception as e:
         print(f"ERROR: Failed to read CSV {csv_path}: {e}")
         return None
 
     if not tasks:
-        print(f"WARNING: CSV {csv_path} has no rows.")
+        print(f"WARNING: CSV {csv_path} has no data rows.")
         return None
 
+    # ── Aggregate ─────────────────────────────────────────────────────────────
     floors = {}
     blocked_tasks = []
     todays_activity = []
     category_counts = {}
 
     for task in tasks:
-        task_name = task.get("Title", "")
-        status = task.get("Status", "")
-        tier1 = task.get("Tier 1", "").strip()
-        tier2 = task.get("Tier 2", "").strip()
-        tier3 = task.get("Tier 3", "").strip()
-        tier4 = task.get("Tier 4", "").strip()
-        tier5 = task.get("Tier 5", "").strip()
-        collection = task.get("Collection", "").strip()
-        location = f"{collection} > {tier1}" if tier1 else collection
-        assignee = task.get("Assignee", "")
+        task_name    = task.get("Title", "")
+        status       = (task.get("Status", "") or "").strip()
+        tier1        = (task.get("Tier 1", "") or "").strip()
+        collection   = (task.get("Collection", "") or "").strip()
+        assignee     = task.get("Assignee", "")
         updated_at_str = task.get("Last Updated", "")
-        tags = task.get("Tag 1", "")
+        raw_cat      = task.get("Category", "")
+
+        # Build location: prefer "Collection > Tier 1", fall back to whichever exists
+        if tier1 and collection:
+            location = f"{collection} > {tier1}"
+        elif tier1:
+            location = tier1
+        elif collection:
+            location = collection
+        else:
+            location = ""
 
         floor = extract_floor(location)
         updated_at = parse_timestamp(updated_at_str)
 
+        # Floor tracking
         if floor not in floors:
-            floors[floor] = {
-                "total": 0,
-                "completed": 0,
-                "last_activity": None,
-            }
+            floors[floor] = {"total": 0, "completed": 0, "last_activity": None}
 
         floors[floor]["total"] += 1
-        if status.strip() in COMPLETED_STATUSES:
+        if status in COMPLETED_STATUSES:
             floors[floor]["completed"] += 1
 
         if updated_at:
@@ -121,7 +159,13 @@ def process_csv_file(csv_path, project_name):
             if prev is None or updated_at > prev:
                 floors[floor]["last_activity"] = updated_at
 
-        if tags and "#blocked" in tags.lower():
+        # Blocked tasks (tag contains "blocked")
+        tags = " ".join([
+            task.get("Tag 1", "") or "",
+            task.get("Tag 2", "") or "",
+            task.get("Tag 3", "") or "",
+        ])
+        if "blocked" in tags.lower():
             blocked_tasks.append({
                 "task_name": task_name,
                 "location": location,
@@ -129,6 +173,7 @@ def process_csv_file(csv_path, project_name):
                 "last_updated": updated_at_str,
             })
 
+        # Today's activity
         if updated_at and updated_at.strftime("%Y-%m-%d") == today_str:
             todays_activity.append({
                 "task_name": task_name,
@@ -138,17 +183,18 @@ def process_csv_file(csv_path, project_name):
                 "updated_at": updated_at_str,
             })
 
-        raw_cat = task.get("Category", "")
-        cat = raw_cat.split("-", 1)[1].strip() if "-" in raw_cat else raw_cat or "Other"
+        # Category breakdown (text after first hyphen)
+        cat = normalize_category(raw_cat)
         category_counts[cat] = category_counts.get(cat, 0) + 1
 
+    # ── Build floor list ──────────────────────────────────────────────────────
     floor_list = []
     stale_floors = []
     total_tasks = 0
     completed_tasks = 0
 
     for floor_name, info in sorted(floors.items()):
-        total_tasks += info["total"]
+        total_tasks    += info["total"]
         completed_tasks += info["completed"]
 
         pct = (info["completed"] / info["total"] * 100) if info["total"] > 0 else 0
@@ -160,8 +206,7 @@ def process_csv_file(csv_path, project_name):
 
         if last_act:
             last_act_iso = last_act.isoformat()
-            delta = now - last_act
-            days_since = delta.days
+            days_since = (now - last_act).days
             is_stale = days_since >= 7
 
         if is_stale:
@@ -179,7 +224,7 @@ def process_csv_file(csv_path, project_name):
 
     overall_pct = (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
 
-    summary = {
+    return {
         "project_name": project_name,
         "last_updated": now.isoformat(),
         "total_tasks": total_tasks,
@@ -193,15 +238,13 @@ def process_csv_file(csv_path, project_name):
         "stale_floors": stale_floors,
     }
 
-    return summary
-
 
 def process_all(fetched_items, data_dir):
     processed = []
 
     for item in fetched_items:
         project_name = item["project_name"]
-        csv_path = item["csv_path"]
+        csv_path     = item["csv_path"]
         project_slug = item.get("project_slug", "")
 
         print(f"Processing CSV for '{project_name}'...")
@@ -210,7 +253,7 @@ def process_all(fetched_items, data_dir):
             if summary is None:
                 continue
 
-            project_dir = os.path.dirname(csv_path)
+            project_dir  = os.path.dirname(csv_path)
             summary_path = os.path.join(project_dir, "summary.json")
             with open(summary_path, "w", encoding="utf-8") as f:
                 json.dump(summary, f, indent=2)
@@ -221,7 +264,6 @@ def process_all(fetched_items, data_dir):
                 "project_slug": project_slug,
                 "summary_path": summary_path,
             })
-
         except Exception as e:
             print(f"ERROR: Failed to process {csv_path}: {e}")
             continue
@@ -230,7 +272,7 @@ def process_all(fetched_items, data_dir):
 
 
 def reprocess_existing(data_dir):
-    """Reprocess latest CSVs for all existing projects."""
+    """Reprocess the latest CSV for every project folder that has one."""
     processed = []
     if not os.path.isdir(data_dir):
         return processed
@@ -244,9 +286,10 @@ def reprocess_existing(data_dir):
         if not csvs:
             continue
 
-        latest_csv = os.path.join(project_dir, csvs[-1])
+        latest_csv   = os.path.join(project_dir, csvs[-1])
         project_name = entry.replace("-", " ").title()
 
+        # Preserve stored project name if summary already exists
         existing_summary = os.path.join(project_dir, "summary.json")
         if os.path.exists(existing_summary):
             try:
@@ -272,3 +315,6 @@ def reprocess_existing(data_dir):
             print(f"ERROR: Failed to reprocess {latest_csv}: {e}")
 
     return processed
+
+if __name__ == '__main__':
+    reprocess_existing('data')
