@@ -1,6 +1,6 @@
 {
   "project_name": "150 westchester",
-  "last_updated": "2026-04-30T20:57:16.428478+00:00",
+  "last_updated": "2026-05-01T11:09:48.000177+00:00",
   "total_tasks": 451,
   "completed_tasks": 227,
   "in_progress_tasks": 224,
@@ -32,7 +32,7 @@
       "percent_in_progress": 100.0,
       "percent_touched": 100.0,
       "last_activity": "2026-04-23T08:43:01+00:00",
-      "days_since_activity": 7,
+      "days_since_activity": 8,
       "is_stale": true
     },
     {
@@ -45,7 +45,7 @@
       "percent_in_progress": 100.0,
       "percent_touched": 100.0,
       "last_activity": "2026-04-23T08:44:31+00:00",
-      "days_since_activity": 7,
+      "days_since_activity": 8,
       "is_stale": true
     },
     {
@@ -58,7 +58,7 @@
       "percent_in_progress": 100.0,
       "percent_touched": 100.0,
       "last_activity": "2026-04-20T09:49:23+00:00",
-      "days_since_activity": 10,
+      "days_since_activity": 11,
       "is_stale": true
     },
     {
@@ -84,7 +84,7 @@
       "percent_in_progress": 26.1,
       "percent_touched": 100.0,
       "last_activity": "2026-03-05T08:02:17+00:00",
-      "days_since_activity": 56,
+      "days_since_activity": 57,
       "is_stale": true
     },
     {
@@ -162,7 +162,7 @@
       "percent_in_progress": 3.6,
       "percent_touched": 100.0,
       "last_activity": "2026-03-16T10:07:15+00:00",
-      "days_since_activity": 45,
+      "days_since_activity": 46,
       "is_stale": true
     },
     {
