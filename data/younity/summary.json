@@ -1,6 +1,6 @@
 {
   "project_name": "Younity",
-  "last_updated": "2026-07-18T11:06:13.289255+00:00",
+  "last_updated": "2026-07-19T11:10:09.942328+00:00",
   "total_tasks": 1179,
   "completed_tasks": 0,
   "in_progress_tasks": 1179,
@@ -19,7 +19,7 @@
       "percent_in_progress": 100.0,
       "percent_touched": 100.0,
       "last_activity": "2026-04-23T13:04:43+00:00",
-      "days_since_activity": 85,
+      "days_since_activity": 86,
       "is_stale": true
     }
   ],
