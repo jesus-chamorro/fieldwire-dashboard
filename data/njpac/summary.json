@@ -1,6 +1,6 @@
 {
   "project_name": "NJPAC",
-  "last_updated": "2026-09-02T14:10:42.572215+00:00",
+  "last_updated": "2026-09-03T14:14:02.521024+00:00",
   "total_tasks": 706,
   "completed_tasks": 0,
   "in_progress_tasks": 706,
@@ -19,7 +19,7 @@
       "percent_in_progress": 100.0,
       "percent_touched": 100.0,
       "last_activity": "2026-04-28T13:59:58+00:00",
-      "days_since_activity": 127,
+      "days_since_activity": 128,
       "is_stale": true
     },
     {
@@ -32,7 +32,7 @@
       "percent_in_progress": 100.0,
       "percent_touched": 100.0,
       "last_activity": "2026-04-28T14:06:41+00:00",
-      "days_since_activity": 127,
+      "days_since_activity": 128,
       "is_stale": true
     }
   ],
